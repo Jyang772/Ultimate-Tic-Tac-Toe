@@ -35,7 +35,7 @@ private slots:
 
     void humanMoves();
     void invalidMove();
-    void computerMove(int);
+    void computerMove(int,int);
 
 
     void on_playAgain_clicked();

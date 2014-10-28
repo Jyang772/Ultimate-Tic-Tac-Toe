@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(options,SIGNAL(choosen()),this,SLOT(begin()));
     connect(game,SIGNAL(humanMoves()),this,SLOT(humanMoves()));
-    connect(game,SIGNAL(computerMove(int)),this,SLOT(computerMove(int)));
+    connect(game,SIGNAL(computerMove(int,int)),this,SLOT(computerMove(int,int)));
 
 }
 
@@ -136,6 +136,9 @@ void MainWindow::itemClicked(){
         game->humanMove(clickedItem->objectName().toInt(),currentGrid);
         nextGrid = clickedItem->objectName().toInt();
 
+        qDebug() << "Check WINNER (After Human Move): ";
+        qDebug() << "currentGrid: " << currentGrid;
+        qDebug() << "nextGrid: " << nextGrid;
         //Check if player has won.
         CheckWinner();
 
@@ -181,9 +184,14 @@ void MainWindow::humanMoves(){
     ui->announce->setText("Make a move.");
 }
 
-void MainWindow::computerMove(int move){
+void MainWindow::computerMove(int move,int grid){
     qDebug() << "ComputerMove: " << move;
     qDebug() << "nextGrid: " << nextGrid;
+    qDebug() << "grid: " << grid;
+
+    if(grid != -1)
+        nextGrid = grid;
+
 
     humanTurn = false;
     itemButtons[nextGrid][move]->setText(QString(QChar(game->gridChar(game->opponent(game->human)))));
@@ -197,17 +205,22 @@ void MainWindow::computerMove(int move){
 
 void MainWindow::CheckWinner(){
 
+    qDebug() << "Winner is " << game->winner(nextGrid) << " at " << nextGrid;
+
     QString announce;
     if(game->winner(nextGrid) == game->human){
+        game->setGridState(nextGrid,game->human);
         ui->announce->setText("You have won!");
         humanTurn = false; //Disable clicking
         ui->playAgain->setVisible(true);
-        return;
+        //return;
     }
     else if(game->winner(nextGrid) == game->opponent(game->human)){
+        game->setGridState(nextGrid,1);
         ui->announce->setText("You have lost!");
+        qDebug() << "COMPUTER WON AT " << nextGrid;
         ui->playAgain->setVisible(true);
-        return;
+        //return;
     }
     else if(game->winner(nextGrid) == 0){
         announce = "TIE! on board" + QString::number(currentGrid);
@@ -215,6 +228,12 @@ void MainWindow::CheckWinner(){
         ui->playAgain->setVisible(true);
         return;
     }
+
+    //Now check ultimate win
+    else if(game->ultWin() == game->human)
+        qDebug() << "HUMAN WIN";
+    else if(game->ultWin() == game->opponent(game->human))
+        qDebug() << "COMPUTER WIN";
 
     if(humanTurn)
         game->CalculateGrid(nextGrid);

@@ -40,10 +40,11 @@ public:
     //Ultimate
     int CalculateGrid(int currentGrid);
     void setGridState(int grid, int winner);
+    int ultWin();
 
 signals:
     void humanMoves();
-    void computerMove(int);
+    void computerMove(int,int);
 
 public slots:
     void humanMove(int,int currentGrid);
@@ -52,8 +53,9 @@ private:
     //Compiler derps with initialization of aggregate members
     //std::vector<char> board{std::vector<char>(NUM_SQUARES,EMPTY)};
     std::vector<int> board = std::vector<int>(NUM_SQUARES,EMPTY);
+    std::vector<int> gridStates = std::vector<int>(NUM_SQUARES,EMPTY);                            //Keep track of Grids that have been completed. Stores either 0,-1,1
+
     std::array<std::vector<int>,9> boards;        //Array that contains all boards from each Grid
-    int gridStates[9] = {};                            //Keep track of Grids that have been completed. Stores either 0,-1,1
 };
 
 #endif // TICTACTOE_H

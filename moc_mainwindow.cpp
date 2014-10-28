@@ -66,8 +66,8 @@ static const uint qt_meta_data_MainWindow[] = {
        4,    0,   53,    2, 0x08,
        5,    0,   54,    2, 0x08,
        6,    0,   55,    2, 0x08,
-       7,    1,   56,    2, 0x08,
-       8,    0,   59,    2, 0x08,
+       7,    2,   56,    2, 0x08,
+       8,    0,   61,    2, 0x08,
 
  // signals: parameters
     QMetaType::Void, QMetaType::Int,    2,
@@ -77,7 +77,7 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,    2,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int,    2,    2,
     QMetaType::Void,
 
        0        // eod
@@ -93,7 +93,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 2: _t->begin(); break;
         case 3: _t->humanMoves(); break;
         case 4: _t->invalidMove(); break;
-        case 5: _t->computerMove((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 5: _t->computerMove((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 6: _t->on_playAgain_clicked(); break;
         default: ;
         }

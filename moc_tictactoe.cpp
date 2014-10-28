@@ -56,14 +56,14 @@ static const uint qt_meta_data_TicTacToe[] = {
 
  // signals: name, argc, parameters, tag, flags
        1,    0,   29,    2, 0x06,
-       3,    1,   30,    2, 0x06,
+       3,    2,   30,    2, 0x06,
 
  // slots: name, argc, parameters, tag, flags
-       4,    2,   33,    2, 0x0a,
+       4,    2,   35,    2, 0x0a,
 
  // signals: parameters
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,    2,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int,    2,    2,
 
  // slots: parameters
     QMetaType::Void, QMetaType::Int, QMetaType::Int,    2,    5,
@@ -77,7 +77,7 @@ void TicTacToe::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         TicTacToe *_t = static_cast<TicTacToe *>(_o);
         switch (_id) {
         case 0: _t->humanMoves(); break;
-        case 1: _t->computerMove((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 1: _t->computerMove((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 2: _t->humanMove((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         default: ;
         }
@@ -91,7 +91,7 @@ void TicTacToe::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
             }
         }
         {
-            typedef void (TicTacToe::*_t)(int );
+            typedef void (TicTacToe::*_t)(int , int );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&TicTacToe::computerMove)) {
                 *result = 1;
             }
@@ -142,9 +142,9 @@ void TicTacToe::humanMoves()
 }
 
 // SIGNAL 1
-void TicTacToe::computerMove(int _t1)
+void TicTacToe::computerMove(int _t1, int _t2)
 {
-    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 1, _a);
 }
 QT_END_MOC_NAMESPACE
