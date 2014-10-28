@@ -105,7 +105,7 @@ int TicTacToe::minimax(std::vector<int>& board, int player){
     int win = winner(board);
     if(win != 0)
     {
-        return win*player;
+        return win*player*2;
     }
 
     int move = -1;
@@ -178,21 +178,37 @@ int TicTacToe::CalculateGrid(int currentGrid){
 
     qDebug() << "CurrentGrid: " << currentGrid << endl;
 
+    utility(currentGrid);
+
     int move = -1;
     int score = -2;
+    int score2 = -2;
     int i;
 
     if(gridStates[currentGrid] == EMPTY){
         for(i = 0; i < 9; ++i) {
             if(boards[currentGrid][i] == EMPTY && gridStates[i] == EMPTY) {
-                qDebug() << "in loop";
+
                 boards[currentGrid][i] = 1;
                 int tempScore = -minimax(boards[i], -1);
+                int tempScore2 = -minimax(boards[currentGrid],-1);
                 boards[currentGrid][i] = 0;
+                qDebug() << "tempScore2: " << tempScore2 << " i: " << i;
+                qDebug() << "score: " << score << " i: " << i;
+                qDebug() << "score2: " << score2 << " i: " << i;
                 if(tempScore > score) {
+                    qDebug() << "tempScore: " << tempScore;
+                    qDebug() << "tempScore2: " << tempScore2;
                     score = tempScore;
+
                     move = i;
                 }
+                if(tempScore2 > score || tempScore2 > score2 ){
+                    move = i;
+                    score2 = tempScore2;
+
+                }
+
             }
         }
         boards[currentGrid][move] = 1;
@@ -245,4 +261,8 @@ void TicTacToe::setGridState(int grid, int winner){
 int TicTacToe::ultWin(){
 
     return winner(gridStates);
+}
+
+int TicTacToe::utility(int currentGrid){
+
 }

@@ -14,6 +14,19 @@ const char TIE = 'T';
 const char NO_ONE = 'N';
 const int EMPTY = 0;
 
+
+const int WINNING_TRIADS[8][3] = {
+    {0, 1, 2},
+    {3, 4, 5},
+    {6, 7, 8},
+    {0, 3, 6},
+    {1, 4, 7},
+    {2, 5, 8},
+    {0, 4, 8},
+    {2, 4, 6},
+};
+
+
 class TicTacToe : public QObject
 {
     Q_OBJECT
@@ -41,6 +54,8 @@ public:
     int CalculateGrid(int currentGrid);
     void setGridState(int grid, int winner);
     int ultWin();
+
+    int utility(int);
 
 signals:
     void humanMoves();
