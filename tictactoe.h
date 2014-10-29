@@ -14,7 +14,7 @@ const char TIE = 'T';
 const char NO_ONE = 'N';
 const int EMPTY = 0;
 
-const int DEPTH_LIMIT = 2;
+const int DEPTH_LIMIT = 6;
 const int VERY_LARGE = 2000000;
 
 
@@ -60,7 +60,7 @@ public:
     int ultWin();
 
 
-    void utility(int,int,int);
+    void utility(std::vector<int>& board,int,int,int);
     int alphaBeta(std::vector<int>& board,int last_slot,int player, int next_player,int alpha, int beta, int depth, int score_so_far, int last_move_won);
 
     int pickMove(int);

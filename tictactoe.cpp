@@ -277,8 +277,10 @@ int TicTacToe::ultWin(){
     return winner(gridStates);
 }
 
-void TicTacToe::utility(int currentGrid,int move,int depth){
+void TicTacToe::utility(std::vector<int>& board,int currentGrid,int move,int depth){
 
+
+    qDebug() << "Utility: " << move;
     bool win = false;
 
     int triad_sum = 0;
@@ -292,32 +294,34 @@ void TicTacToe::utility(int currentGrid,int move,int depth){
     int temp = 0;
     for(int j=0; j<8; j++){
         temp = 0;
-        //if(boards[currentGrid][move] == EMPTY){
-            //boards[currentGrid][move] = 1;
 
-            temp = boards[currentGrid][WINNING_TRIADS[j][0]] + boards[currentGrid][WINNING_TRIADS[j][1]] + boards[currentGrid][WINNING_TRIADS[j][2]];
+        temp = boards[currentGrid][WINNING_TRIADS[j][0]] + boards[currentGrid][WINNING_TRIADS[j][1]] + boards[currentGrid][WINNING_TRIADS[j][2]];
             triad_sum = temp;
-            //                if(temp > triad_sum){
-            //                    triad_sum = temp;
-            //                    index = i;
-            //                    qDebug() << "Score_: " << score;
-            //                    qDebug() << "triad_sum: " << triad_sum;
-            //                }
-            //boards[currentGrid][move] = EMPTY;
-        //}
+
+            if(temp == 2){
+                qDebug() << "move: " << move << "j: " << j;
+                qDebug() << WINNING_TRIADS[0][1];
+                qDebug() << "[WINNING_TRIADS[j][0]]: " << WINNING_TRIADS[j][0];
+                qDebug() << "[WINNING_TRIADS[j][1]]: " << WINNING_TRIADS[j][1];
+                qDebug() << "[WINNING_TRIADS[j][2]]: " << WINNING_TRIADS[j][2];
+                qDebug() << "boards[4][0]: " << boards[4][0];
+                qDebug() << "boards[4][1]: " << boards[4][1];
+                qDebug() << "boards[4][2]: " << boards[4][2];
 
 
-        qDebug() << "TRIAD_SUM: " << triad_sum << " i: " << currentGrid << " j: " << move << endl;
+            }
+
+
         switch(triad_sum){
 
         case 3:
         case -3:
-            win = true;
+            win = 1;
             score = boards[currentGrid][move] * VERY_LARGE - depth;
             break;
         case 2:{
             score += 3000;
-            qDebug() << "THIS IS THE MOVE TO MAKE: " << move;
+            qDebug() << "move: " << move << " currentBoard: " << currentGrid;
             break;
         }
         case -2:
@@ -341,12 +345,10 @@ void TicTacToe::utility(int currentGrid,int move,int depth){
             break;
         }
 
-        qDebug() << "Score progress: " << score;
     }
 
     if(!win){
 
-        qDebug() << "DID NOT WIN: " << move << endl;
 
         if(move == 0 || move == 2 || move == 6 || move == 8)
             score += 2;
@@ -356,11 +358,10 @@ void TicTacToe::utility(int currentGrid,int move,int depth){
 
     }
 
-    qDebug() << "FIRST DIG";
-
 
     rets[0] = score;
     rets[1] = win;
+
 
 }
 
@@ -376,7 +377,6 @@ int TicTacToe::pickMove(int currentGrid){
 
     //int bestScore = -VERY_LARGE - DEPTH_LIMIT;
 
-    qDebug() << "BEST SCORE: " << bestScore;
 
     for(int i=0; i<9; i++){
 
@@ -384,12 +384,18 @@ int TicTacToe::pickMove(int currentGrid){
             boards[currentGrid][i] = 1;
 
 
-            utility(currentGrid,i,0);
+            utility(boards[currentGrid],currentGrid,i,0);
 
             qDebug() << "RETS[0]: " << rets[0];
+            qDebug() << "Calling alphaBeta(): " << endl;
 
-            score = alphaBeta(boards[currentGrid],currentGrid,1,-1,(-(VERY_LARGE+DEPTH_LIMIT)-1),(VERY_LARGE+DEPTH_LIMIT+1),2,rets[0],rets[1]);
+
+
+            score = alphaBeta(boards[currentGrid],i,-1,1,(-(VERY_LARGE+DEPTH_LIMIT)-1),(VERY_LARGE+DEPTH_LIMIT+1),1,rets[0],rets[1]);
             qDebug() << "SCORE: " << score << " i: " << i << endl;
+
+
+            //std::cin.get();
 
             boards[currentGrid][i] = 0;
 
@@ -397,6 +403,7 @@ int TicTacToe::pickMove(int currentGrid){
 
 
             if(score > bestScore){
+                qDebug() << "SCORE BEAT: " << score;
                 bestScore = score;
                 my_moves.push_back(i);
             }
@@ -411,10 +418,11 @@ int TicTacToe::pickMove(int currentGrid){
     }
 
     int rv = 0;
-    if(my_moves.size() < 1)
-        qDebug() << "ERROR.";
+    if(my_moves.size() < 1){
+
+    }
     else{
-        rv = my_moves[0];
+        rv = my_moves.back();
         if(my_moves.size() > 1){
             //Choose a move at random.
         }
@@ -422,7 +430,6 @@ int TicTacToe::pickMove(int currentGrid){
     }
 
 
-    qDebug() << "COMPUTER MOVE: " << rv << endl;
     return rv;
 
 }
@@ -432,9 +439,15 @@ int TicTacToe::pickMove(int currentGrid){
 
 int TicTacToe::alphaBeta(std::vector<int>& board,int last_slot,int player, int next_player,int alpha, int beta, int depth, int score_so_far, int last_move_won){
 
+
+    qDebug() << "last_slot: " << last_slot;
+    qDebug() << "board[0]: " << board[0];
+
     if(last_move_won || depth >= DEPTH_LIMIT){
         return score_so_far;
     }
+
+
 
     int score = score_so_far;
     int value;
@@ -443,7 +456,7 @@ int TicTacToe::alphaBeta(std::vector<int>& board,int last_slot,int player, int n
         if(board[i] == EMPTY){
             board[i] = player;
 
-            utility(last_slot,i,depth);
+            utility(board,last_slot,i,depth);
             value = alphaBeta(board,i,next_player,player,alpha,beta,depth+1,score_so_far + rets[0],rets[1]);
 
             board[i] = 0;
