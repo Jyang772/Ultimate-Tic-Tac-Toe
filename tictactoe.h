@@ -14,6 +14,10 @@ const char TIE = 'T';
 const char NO_ONE = 'N';
 const int EMPTY = 0;
 
+const int DEPTH_LIMIT = 2;
+const int VERY_LARGE = 2000000;
+
+
 
 const int WINNING_TRIADS[8][3] = {
     {0, 1, 2},
@@ -55,7 +59,11 @@ public:
     void setGridState(int grid, int winner);
     int ultWin();
 
-    int utility(int);
+
+    void utility(int,int,int);
+    int alphaBeta(std::vector<int>& board,int last_slot,int player, int next_player,int alpha, int beta, int depth, int score_so_far, int last_move_won);
+
+    int pickMove(int);
 
 signals:
     void humanMoves();
@@ -71,6 +79,9 @@ private:
     std::vector<int> gridStates = std::vector<int>(NUM_SQUARES,EMPTY);                            //Keep track of Grids that have been completed. Stores either 0,-1,1
 
     std::array<std::vector<int>,9> boards;        //Array that contains all boards from each Grid
+
+    int rets[2] = {};
+
 };
 
 #endif // TICTACTOE_H

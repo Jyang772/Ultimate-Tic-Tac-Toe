@@ -13,4 +13,5 @@ INCLUDEPATH += .
 # Input
 HEADERS += dialog.h mainwindow.h tictactoe.h
 FORMS += dialog.ui mainwindow.ui
-SOURCES += dialog.cpp main.cpp mainwindow.cpp tictactoe.cpp
+SOURCES += dialog.cpp main.cpp mainwindow.cpp tictactoe.cpp \
+    strategy.cpp

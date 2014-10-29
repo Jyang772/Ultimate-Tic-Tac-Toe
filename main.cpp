@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[])
 {
-    std::cout << argv[1] << std::endl;
+    //std::cout << argv[1] << std::endl;
 
     //if(argc == 2 && !strcmp(argv[1],"-win")){
     if(true){

@@ -48,13 +48,15 @@ OBJECTS_DIR   = ./
 SOURCES       = dialog.cpp \
 		main.cpp \
 		mainwindow.cpp \
-		tictactoe.cpp moc_dialog.cpp \
+		tictactoe.cpp \
+		strategy.cpp moc_dialog.cpp \
 		moc_mainwindow.cpp \
 		moc_tictactoe.cpp
 OBJECTS       = dialog.o \
 		main.o \
 		mainwindow.o \
 		tictactoe.o \
+		strategy.o \
 		moc_dialog.o \
 		moc_mainwindow.o \
 		moc_tictactoe.o
@@ -306,7 +308,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/TTT1.0.0 || mkdir -p .tmp/TTT1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/TTT1.0.0/ && $(COPY_FILE) --parents dialog.h mainwindow.h tictactoe.h .tmp/TTT1.0.0/ && $(COPY_FILE) --parents dialog.cpp main.cpp mainwindow.cpp tictactoe.cpp .tmp/TTT1.0.0/ && $(COPY_FILE) --parents dialog.ui mainwindow.ui .tmp/TTT1.0.0/ && (cd `dirname .tmp/TTT1.0.0` && $(TAR) TTT1.0.0.tar TTT1.0.0 && $(COMPRESS) TTT1.0.0.tar) && $(MOVE) `dirname .tmp/TTT1.0.0`/TTT1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/TTT1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/TTT1.0.0/ && $(COPY_FILE) --parents dialog.h mainwindow.h tictactoe.h .tmp/TTT1.0.0/ && $(COPY_FILE) --parents dialog.cpp main.cpp mainwindow.cpp tictactoe.cpp strategy.cpp .tmp/TTT1.0.0/ && $(COPY_FILE) --parents dialog.ui mainwindow.ui .tmp/TTT1.0.0/ && (cd `dirname .tmp/TTT1.0.0` && $(TAR) TTT1.0.0.tar TTT1.0.0 && $(COMPRESS) TTT1.0.0.tar) && $(MOVE) `dirname .tmp/TTT1.0.0`/TTT1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/TTT1.0.0
 
 
 clean:compiler_clean 
@@ -1218,6 +1220,9 @@ tictactoe.o: tictactoe.cpp tictactoe.h \
 		/usr/include/qt5/QtCore/qprocess.h \
 		/usr/include/qt5/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tictactoe.o tictactoe.cpp
+
+strategy.o: strategy.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o strategy.o strategy.cpp
 
 moc_dialog.o: moc_dialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_dialog.o moc_dialog.cpp
