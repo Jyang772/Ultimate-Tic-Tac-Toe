@@ -31,6 +31,19 @@ const int WINNING_TRIADS[8][3] = {
 };
 
 
+const int BY_SLOT[9][5] = {
+
+    {3,0,3,6},  //First element tells how many elements are present
+    {2,0,4},
+    {3,0,5,7},
+    {2,1,3},
+    {4,1,4,6,7},
+    {2,1,5},
+    {3,2,3,7},
+    {2,2,4},
+    {3,2,5,6}
+};
+
 class TicTacToe : public QObject
 {
     Q_OBJECT
