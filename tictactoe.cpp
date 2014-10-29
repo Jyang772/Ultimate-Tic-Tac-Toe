@@ -353,8 +353,6 @@ void TicTacToe::utility(std::vector<int>& board,int currentGrid,int move,int dep
 //        qDebug() << "board[move]: " << boards[currentGrid][move];
 
             score += boards[currentGrid][move]*bonus;
-            if(move == 5 && currentGrid == 5)
-            qDebug() << "move: " << move << " score: " << score;
 
 
     }
@@ -383,7 +381,7 @@ int TicTacToe::pickMove(int currentGrid){
 
 
             utility(boards[currentGrid],currentGrid,slot,0);
-            qDebug() << "***************";
+            //qDebug() << "***************";
 
             score = alphaBeta(boards[currentGrid],slot,-1,1,(-(VERY_LARGE+DEPTH_LIMIT)-1),(VERY_LARGE+DEPTH_LIMIT+1),1,rets[0],rets[1]);
 
