@@ -14,7 +14,7 @@ const char TIE = 'T';
 const char NO_ONE = 'N';
 const int EMPTY = 0;
 
-const int DEPTH_LIMIT = 6;
+const int DEPTH_LIMIT = 2;
 const int VERY_LARGE = 2000000;
 
 
