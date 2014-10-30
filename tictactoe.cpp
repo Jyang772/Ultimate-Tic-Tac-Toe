@@ -16,13 +16,6 @@ TicTacToe::TicTacToe(QObject *parent) : QObject(parent)
 
 }
 
-int TicTacToe::opponent(int piece){
-    if(piece == -1)
-        return 1;
-    else
-        return -1;
-}
-
 void TicTacToe::humanMove(int move,int currentGrid){
 
     boards[currentGrid][move] = human;
@@ -31,8 +24,7 @@ void TicTacToe::humanMove(int move,int currentGrid){
 
 
 bool TicTacToe::isLegal(int move,int currentGrid) const{
-    qDebug() << "[0][0] << " << boards[0][4];
-    qDebug() << "wut: " << boards[currentGrid][move] << endl;
+
     return (boards[currentGrid][move] == EMPTY);
 }
 
@@ -62,6 +54,7 @@ int TicTacToe::winner(const std::vector<int> &board){
     //No one has won yet
     return 0;
 }
+
 
 int TicTacToe::winner(int currentGrid){
 
@@ -95,69 +88,9 @@ int TicTacToe::winner(int currentGrid){
         return 0;
 }
 
+
 void TicTacToe::reset(){
     board = std::vector<int>(NUM_SQUARES,EMPTY);
-}
-
-int TicTacToe::minimax(std::vector<int>& board, int player){
-    //printf("Entered minimax. player: %d\n", player);
-    //qDebug() << "Entered minimax. player: " << player << endl;
-
-    //How is the position like for player (their turn) on board?
-    int win = winner(board);
-    if(win != 0)
-    {
-        return win*player*2;
-    }
-
-    int move = -1;
-    int score = -2;//Losing moves are preferred to no move
-    int i;
-    for(i = 0; i < 9; ++i) {//For all moves,
-        if(board[i] == EMPTY) {//If legal,
-            board[i] = player;//Try the move
-
-            int thisScore = -minimax(board, player*-1);
-            //printf("thisScore: %d, score: %d, player: %d\n",thisScore,score,player);
-            //qDebug() << "player*-1: " << player *-1 << endl;
-            if(thisScore > score) {
-                score = thisScore;
-                move = i;
-            }//Pick the one that's worst for the opponent
-            board[i] = 0;//Reset board after try
-
-        }
-    }
-
-    if(move == -1) return 0;
-    return score;
-
-}
-
-void TicTacToe::computerMax(){
-
-    //qDebug() << "Inside computerMax()\n";
-    int move = -1;
-    int score = -2;
-    int i;
-    for(i = 0; i < 9; ++i) {
-        if(boards[0][i] == EMPTY) {
-            boards[0][i] = 1;
-            int tempScore = -minimax(boards[0], -1);
-            boards[0][i] = 0;
-            if(tempScore > score) {
-                score = tempScore;
-                move = i;
-            }
-        }
-    }
-    //returns a score based on minimax tree at a given node.
-    boards[0][move] = 1;
-
-    qDebug() << "before emit: " << move << endl;
-
-    emit computerMove(move,0); //ambiguous
-
 }
 
 char TicTacToe::gridChar(int i) {
@@ -175,6 +108,7 @@ char TicTacToe::gridChar(int i) {
 
 
 //Ultimate Tic-Tac-Toe Functionality
+//Calculates which tile to play
 
 int TicTacToe::CalculateGrid(int currentGrid){
 
@@ -189,8 +123,9 @@ int TicTacToe::CalculateGrid(int currentGrid){
             if((i != currentGrid)){
                 move = pickMove(i,best);
                 qDebug() << "best: " << best;
-                if(best > bestscore){
+                if(best > bestscore && boards[move][i] == EMPTY){
                     qDebug() << "move: " << move << " i: " << i;
+                    boards[move][i] = 1;
                     emit computerMove(move,i);
                     return 20;
                 }
@@ -204,86 +139,8 @@ int TicTacToe::CalculateGrid(int currentGrid){
     boards[currentGrid][movetomake] = 1;
     emit computerMove(movetomake,currentGrid);
     return 20;
-
-
-    //    qDebug() << "UTILITY: ";
-    //    boards[currentGrid][1] = 1;
-    //    utility(currentGrid,1,1);
-    //    boards[currentGrid][1] = 0;
-
-    //utility(currentGrid,0);
-
-    int move = -1;
-    int score = -2;
-    int score2 = -2;
-    int i;
-
-    if(gridStates[currentGrid] == EMPTY){
-        for(i = 0; i < 9; ++i) {
-            if(boards[currentGrid][i] == EMPTY && gridStates[i] == EMPTY) {
-
-                boards[currentGrid][i] = 1;
-                int tempScore = -minimax(boards[i], -1);             //Test for possible moves for other subBoards
-                int tempScore2 = -minimax(boards[currentGrid],-1);   //Test to see how possible moves affect currentGrid
-                boards[currentGrid][i] = 0;
-                qDebug() << "tempScore2: " << tempScore2 << " i: " << i;
-                qDebug() << "score: " << score << " i: " << i;
-                qDebug() << "score2: " << score2 << " i: " << i;
-                if(tempScore > score) {
-                    qDebug() << "tempScore: " << tempScore;
-                    qDebug() << "tempScore2: " << tempScore2;
-                    score = tempScore;
-
-                    move = i;
-                }
-                if(tempScore2 > score || tempScore2 > score2 ){
-                    move = i;
-                    score2 = tempScore2;
-
-                }
-
-            }
-        }
-        boards[currentGrid][move] = 1;
-        emit computerMove(move,currentGrid); //ambiguous
-        return 0;
-
-
-    }
-
-    int movement;
-    for(int j=0; j<9; ++j){
-        for(i = 0; i < 9; ++i) {
-            if(boards[j][i] == EMPTY && gridStates[j] == EMPTY) {
-                qDebug() << "J in loop: " << j;
-                boards[j][i] = 1;
-                int tempScore = -minimax(boards[i], -1);
-                boards[j][i] = 0;
-                if(tempScore > score && gridStates[i] == EMPTY) {
-                    score = tempScore;
-                    move = i;
-                    movement = j;
-                }
-            }
-        }
-    }
-    qDebug() << "movement: " << movement;
-    qDebug() << "move_: " << move;
-    boards[movement][move] = 1;
-    emit computerMove(move,movement); //ambiguous
-
-
-
-    //returns a score based on minimax tree at a given node.
-    //boards[currentGrid][move] = 1;
-
-    qDebug() << "before emit: " << move << endl;
-
-    //emit computerMove(move); //ambiguous
-
-
 }
-//Calculates which tile to play
+
 
 void TicTacToe::setGridState(int grid, int winner){
 
@@ -296,7 +153,7 @@ int TicTacToe::ultWin(){
     return winner(gridStates);
 }
 
-void TicTacToe::utility(std::vector<int>& board,int currentGrid,int move,int depth){
+void TicTacToe::utility(int currentGrid,int move,int depth){
 
 
     bool win = false;
@@ -308,9 +165,9 @@ void TicTacToe::utility(std::vector<int>& board,int currentGrid,int move,int dep
     int numElements = BY_SLOT[move][0];
 
     for(int i=1; i<=numElements; i++){
-         triad_sum = 0;
+        triad_sum = 0;
         for(int j=0; j<3; j++){
-        triad_sum += boards[currentGrid][WINNING_TRIADS[BY_SLOT[move][i]][j]];
+            triad_sum += boards[currentGrid][WINNING_TRIADS[BY_SLOT[move][i]][j]];
         }
 
 
@@ -322,7 +179,6 @@ void TicTacToe::utility(std::vector<int>& board,int currentGrid,int move,int dep
         {
             win = 1;
             score = boards[currentGrid][WINNING_TRIADS[BY_SLOT[move][i]][0]] * VERY_LARGE - depth;
-            qDebug() << "MOVE__: " << move << endl;
             break;
         }
         case 2:{
@@ -352,7 +208,7 @@ void TicTacToe::utility(std::vector<int>& board,int currentGrid,int move,int dep
         }
 
 
-}
+    }
 
 
     if(!win){
@@ -365,14 +221,14 @@ void TicTacToe::utility(std::vector<int>& board,int currentGrid,int move,int dep
         if(move == 4){
             bonus += 7;//*boards[currentGrid][move];
         }
-//qDebug() << "boards[currentGrid][move]: " << boards[currentGrid][move];
-//qDebug() << "bonus: " << bonus;
-//        qDebug() << "Bonus: " << bonus;
-//        qDebug() << "Slot: " << move;
-//        qDebug() << "Move: " << currentGrid;
-//        qDebug() << "board[move]: " << boards[currentGrid][move];
+        //qDebug() << "boards[currentGrid][move]: " << boards[currentGrid][move];
+        //qDebug() << "bonus: " << bonus;
+        //        qDebug() << "Bonus: " << bonus;
+        //        qDebug() << "Slot: " << move;
+        //        qDebug() << "Move: " << currentGrid;
+        //        qDebug() << "board[move]: " << boards[currentGrid][move];
 
-            score += boards[currentGrid][move]*bonus;
+        score += boards[currentGrid][move]*bonus;
 
 
     }
@@ -382,7 +238,6 @@ void TicTacToe::utility(std::vector<int>& board,int currentGrid,int move,int dep
     rets[1] = win;
 
 }
-
 
 int TicTacToe::pickMove(int currentGrid,int& best){
 
@@ -397,11 +252,8 @@ int TicTacToe::pickMove(int currentGrid,int& best){
             boards[currentGrid][slot] = 1;
 
 
-            utility(boards[currentGrid],currentGrid,slot,0);
-            //qDebug() << "***************";
-
+            utility(currentGrid,slot,0);
             score = alphaBeta(boards[currentGrid],slot,-1,1,(-(VERY_LARGE+DEPTH_LIMIT)-1),(VERY_LARGE+DEPTH_LIMIT+1),1,rets[0],rets[1]);
-
 
             boards[currentGrid][slot] = 0;
 
@@ -457,7 +309,7 @@ int TicTacToe::alphaBeta(std::vector<int>& board,int last_slot,int player, int n
         if(boards[last_slot][i] == EMPTY){
             boards[last_slot][i] = player;
 
-            utility(board,last_slot,i,depth);
+            utility(last_slot,i,depth);
             value = alphaBeta(board,i,next_player,player,alpha,beta,depth+1,score_so_far + rets[0],rets[1]);
 
             boards[last_slot][i] = 0;
@@ -475,7 +327,6 @@ int TicTacToe::alphaBeta(std::vector<int>& board,int last_slot,int player, int n
             if(beta <= alpha)
                 break;
         }
-        //qDebug() << "last_slot: " << last_slot << " i: " << i;
 
     }
 

@@ -51,21 +51,18 @@ class TicTacToe : public QObject
 public:
     explicit TicTacToe(QObject *parent = 0);
 
-    int winner(const std::vector<int>& board); //Checks to see if anyone has won
-    int winner(int currentGrid);
 
-    int opponent(int piece);
-    bool isLegal(int move, int currentGrid) const;
-
-    int human;
+    int human = -1;
     int turn;
     int winningRows[3];
+
+
+
+    bool isLegal(int move, int currentGrid) const;
 
     void reset();
 
     //Minimax
-    void computerMax();
-    int minimax(std::vector<int>& board,int player);
     char gridChar(int i);
 
     //Ultimate
@@ -73,11 +70,16 @@ public:
     void setGridState(int grid, int winner);
     int ultWin();
 
+    //Check for winners
+    int winner(const std::vector<int>& board); //Checks to see if anyone has won
+    int winner(int currentGrid);
 
-    void utility(std::vector<int>& board,int,int,int);
+
+    //Fundamental Ultimate Tic-Tac-Toe
+    int pickMove(int,int&);
+    void utility(int,int,int);
     int alphaBeta(std::vector<int>& board,int last_slot,int player, int next_player,int alpha, int beta, int depth, int score_so_far, int last_move_won);
 
-    int pickMove(int,int&);
 
 signals:
     void humanMoves();

@@ -26,6 +26,7 @@ public:
 
     void colorBoard(int nextGrid, int move);
     void colorBoardWin(int nextGrid,int player);
+    void colorBoardUltimateWin(int player);
 
     ~MainWindow();
 
@@ -64,9 +65,8 @@ private:
 
 
     int wonGrids[9] = {};
-
-
     int previousMove[2] = {-1,-1};  //Stores currentGrid, move
+    int player; //Keeps track of current player
 
 
 
