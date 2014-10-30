@@ -33,7 +33,12 @@ public:
 signals:
     void turnComplete(int);
 
+public slots:
+    int computer(int grid);
+    void prediction(QString);
+
 private slots:
+
     void itemClicked();
     void begin(int strength);
 
@@ -67,7 +72,10 @@ private:
 
     int wonGrids[9] = {};
     int previousMove[2] = {-1,-1};  //Stores currentGrid, move
-    int player; //Keeps track of current player
+    int player = 1; //Keeps track of current
+
+
+    int test = -1;
 
 
 

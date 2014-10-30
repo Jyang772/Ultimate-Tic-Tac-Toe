@@ -11,6 +11,12 @@ int main(int argc, char *argv[])
 
     MainWindow w;
     w.show();
+
+//    int nextGrid = -1;
+//    for(int i=0; i<22;i++){
+//    nextGrid = w.computer(nextGrid);
+//    }
+
     return a.exec();
     }
     else

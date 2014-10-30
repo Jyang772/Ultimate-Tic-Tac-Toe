@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QThread>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(options,SIGNAL(choosen(int)),this,SLOT(begin(int)));
     connect(game,SIGNAL(humanMoves()),this,SLOT(humanMoves()));
     connect(game,SIGNAL(computerMove(int,int)),this,SLOT(computerMove(int,int)));
-
+    connect(game,SIGNAL(prediction(QString)),this,SLOT(prediction(QString)));
 }
 
 MainWindow::~MainWindow()
@@ -134,6 +135,7 @@ void MainWindow::itemClicked(){
     currentGrid = clickedItem->parent()->objectName().toInt();
 
     if(currentGrid != nextGrid && nextGrid != -1 && !wonGrids[nextGrid]){
+        qDebug() << "NOPE";
         invalidMove();
         return;
     }
@@ -146,12 +148,15 @@ void MainWindow::itemClicked(){
 
         game->humanMove(clickedItem->objectName().toInt(),currentGrid);           //Sets subBoard with player's char
 
-        nextGrid = clickedItem->objectName().toInt();                             //next move for computer will need to be where player sent it to.
 
+        //Change player
+        player = 1;
         //Check if player has won.
         CheckWinner();
+        nextGrid = clickedItem->objectName().toInt();                             //next move for computer will need to be where player sent it to.
 
-        game->CalculateGrid(nextGrid);
+
+        game->CalculateGrid(nextGrid,1);
 
     }
     else if(!game->isLegal(clickedItem->objectName().toInt(),currentGrid))
@@ -169,7 +174,7 @@ void MainWindow::begin(int strength){
     if(options->getChar() == 'O'){
         text.append(". Computer moves first.");
         player = 1;
-        game->CalculateGrid(4); //Computer moves.
+        game->CalculateGrid(4,1); //Computer moves.
     }
     else{
         text.append(". Select a square.");
@@ -185,7 +190,9 @@ void MainWindow::humanMoves(){
 
     humanTurn = true;
     ui->announce->setText("Make a move.");
+
 }
+
 
 void MainWindow::computerMove(int move,int grid){
 
@@ -197,8 +204,15 @@ void MainWindow::computerMove(int move,int grid){
     qDebug() << "NEXTGRID: " << grid;
 
 
+    qDebug() << "PLAYER: " << player;
     humanTurn = false;
-    itemButtons[nextGrid][move]->setText(QString(QChar(game->gridChar(1))));
+    itemButtons[nextGrid][move]->setText(QString(QChar(game->gridChar(player))));
+
+    //Change player to opponent
+    if(player == 1)
+        player = -1;
+    else
+        player = 1;
 
     colorBoard(nextGrid,move);
 
@@ -213,18 +227,23 @@ void MainWindow::computerMove(int move,int grid){
     humanMoves();
 
 
+    //emit computer(nextGrid);
 }
+
 
 void MainWindow::CheckWinner(){
 
     QString announce;
     if(game->winner(nextGrid) == -1){
-        game->setGridState(nextGrid,game->human);
+        game->setGridState(nextGrid,-1);
+
+        qDebug() << "PLAYER WON AT " << nextGrid;
 
         humanTurn = false; //Disable clicking
 
         wonGrids[nextGrid] = -1;
-        colorBoardWin(nextGrid,1);
+        colorBoardWin(nextGrid,-1);
+
         ui->playAgain->setVisible(true);
     }
     else if(game->winner(nextGrid) == 1){
@@ -233,7 +252,7 @@ void MainWindow::CheckWinner(){
         qDebug() << "COMPUTER WON AT " << nextGrid;
 
         wonGrids[nextGrid] = 1;
-        colorBoardWin(nextGrid,-1);
+        colorBoardWin(nextGrid,1);
 
         ui->playAgain->setVisible(true);
     }
@@ -248,7 +267,7 @@ void MainWindow::CheckWinner(){
     }
 
     //Now check ultimate win
-    else if(game->ultWin() == -1)
+    if(game->ultWin() == -1)
         qDebug() << "HUMAN WIN";
     else if(game->ultWin() == -1)
         qDebug() << "COMPUTER WIN";
@@ -263,9 +282,22 @@ void MainWindow::invalidMove(){
 
 void MainWindow::on_playAgain_clicked()
 {
-    for(int i=0; i<9; i++)
-        itemButtons[4][i]->setText("");
+    for(int i=0; i<9; i++){
+        for(int j=0;j<9;j++){
+            itemButtons[i][j]->setText("");
+        }
+    }
 
+    for(int i=0; i<9; i++){
+        frames[i]->setStyleSheet("background-color: none");
+        wonGrids[i] = 0;
+        for(int j=0; j<9; j++){
+            itemButtons[i][j]->setStyleSheet("background-color: none");
+        }
+    }
+
+    currentGrid = -1;
+    nextGrid = -1;
     game->reset();
     begin(strength);
 
@@ -302,12 +334,12 @@ void MainWindow::colorBoard(int nextGrid, int move){
     itemButtons[nextGrid][move]->setStyleSheet("background-color: yellow");
 
     if(wonGrids[move] == EMPTY){
-    frames[move]->setStyleSheet("background-color: lightgreen");
+        frames[move]->setStyleSheet("background-color: lightgreen");
     }
     else{
         for(int i=0; i<9; i++){
             if(i != move)
-            frames[i]->setStyleSheet("background-color: lightblue");
+                frames[i]->setStyleSheet("background-color: lightblue");
         }
     }
 
@@ -320,23 +352,44 @@ void MainWindow::colorBoardWin(int nextGrid,int player){
 
 
     if(player == -1){
-        itemButtons[nextGrid][game->winningRows[0]]->setStyleSheet("background-color: pink");
-        itemButtons[nextGrid][game->winningRows[1]]->setStyleSheet("background-color: pink");
-        itemButtons[nextGrid][game->winningRows[2]]->setStyleSheet("background-color: pink");
-    }
-    else{
         itemButtons[nextGrid][game->winningRows[0]]->setStyleSheet("background-color: lightblue");
         itemButtons[nextGrid][game->winningRows[1]]->setStyleSheet("background-color: lightblue");
         itemButtons[nextGrid][game->winningRows[2]]->setStyleSheet("background-color: lightblue");
+    }
+    else{
+        itemButtons[nextGrid][game->winningRows[0]]->setStyleSheet("background-color: pink");
+        itemButtons[nextGrid][game->winningRows[1]]->setStyleSheet("background-color: pink");
+        itemButtons[nextGrid][game->winningRows[2]]->setStyleSheet("background-color: pink");
     }
 
 
 
 }
 
-
-
 void MainWindow::colorBoardUltimateWin(int player){
 
     //for(int i=0; i<)
+}
+
+int MainWindow::computer(int grid){
+
+    qDebug() << "Player__: " << player;
+    int current;
+    if(grid == -1 && nextGrid == -1){
+        current = 4;
+        nextGrid = 4;
+    }
+
+
+
+    game->CalculateGrid(nextGrid,player);
+    return nextGrid;
+
+}
+
+
+void MainWindow::prediction(QString prediction){
+
+    ui->predictor->setText(prediction);
+
 }

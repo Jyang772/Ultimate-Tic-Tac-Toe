@@ -30,8 +30,8 @@
    <widget class="QPushButton" name="playAgain">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>670</y>
+      <x>310</x>
+      <y>650</y>
       <width>141</width>
       <height>27</height>
      </rect>
@@ -40,11 +40,11 @@
      <string>Click to Play Again</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>100</y>
+      <x>90</x>
+      <y>80</y>
       <width>641</width>
       <height>521</height>
      </rect>
@@ -188,6 +188,19 @@
       </widget>
      </item>
     </layout>
+   </widget>
+   <widget class="QLabel" name="predictor">
+    <property name="geometry">
+     <rect>
+      <x>46</x>
+      <y>650</y>
+      <width>221</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>nope.avi</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">

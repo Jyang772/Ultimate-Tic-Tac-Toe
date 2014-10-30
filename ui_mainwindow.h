@@ -32,7 +32,7 @@ public:
     QWidget *centralWidget;
     QLabel *announce;
     QPushButton *playAgain;
-    QWidget *widget;
+    QWidget *layoutWidget;
     QGridLayout *gridLayout_11;
     QFrame *gridFrame;
     QGridLayout *gridLayout;
@@ -60,6 +60,7 @@ public:
     QFrame *line_4;
     QFrame *line_7;
     QFrame *line_8;
+    QLabel *predictor;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -76,16 +77,16 @@ public:
         announce->setGeometry(QRect(30, 0, 351, 21));
         playAgain = new QPushButton(centralWidget);
         playAgain->setObjectName(QStringLiteral("playAgain"));
-        playAgain->setGeometry(QRect(350, 670, 141, 27));
-        widget = new QWidget(centralWidget);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(130, 100, 641, 521));
-        gridLayout_11 = new QGridLayout(widget);
+        playAgain->setGeometry(QRect(310, 650, 141, 27));
+        layoutWidget = new QWidget(centralWidget);
+        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
+        layoutWidget->setGeometry(QRect(90, 80, 641, 521));
+        gridLayout_11 = new QGridLayout(layoutWidget);
         gridLayout_11->setSpacing(6);
         gridLayout_11->setContentsMargins(11, 11, 11, 11);
         gridLayout_11->setObjectName(QStringLiteral("gridLayout_11"));
         gridLayout_11->setContentsMargins(0, 0, 0, 0);
-        gridFrame = new QFrame(widget);
+        gridFrame = new QFrame(layoutWidget);
         gridFrame->setObjectName(QStringLiteral("gridFrame"));
         gridLayout = new QGridLayout(gridFrame);
         gridLayout->setSpacing(6);
@@ -95,14 +96,14 @@ public:
 
         gridLayout_11->addWidget(gridFrame, 0, 0, 1, 1);
 
-        line_6 = new QFrame(widget);
+        line_6 = new QFrame(layoutWidget);
         line_6->setObjectName(QStringLiteral("line_6"));
         line_6->setFrameShape(QFrame::VLine);
         line_6->setFrameShadow(QFrame::Sunken);
 
         gridLayout_11->addWidget(line_6, 3, 3, 1, 1);
 
-        gridFrame_8 = new QFrame(widget);
+        gridFrame_8 = new QFrame(layoutWidget);
         gridFrame_8->setObjectName(QStringLiteral("gridFrame_8"));
         gridLayout_8 = new QGridLayout(gridFrame_8);
         gridLayout_8->setSpacing(6);
@@ -112,14 +113,14 @@ public:
 
         gridLayout_11->addWidget(gridFrame_8, 6, 2, 1, 1);
 
-        line_5 = new QFrame(widget);
+        line_5 = new QFrame(layoutWidget);
         line_5->setObjectName(QStringLiteral("line_5"));
         line_5->setFrameShape(QFrame::VLine);
         line_5->setFrameShadow(QFrame::Sunken);
 
         gridLayout_11->addWidget(line_5, 3, 1, 1, 1);
 
-        gridFrame_4 = new QFrame(widget);
+        gridFrame_4 = new QFrame(layoutWidget);
         gridFrame_4->setObjectName(QStringLiteral("gridFrame_4"));
         gridLayout_4 = new QGridLayout(gridFrame_4);
         gridLayout_4->setSpacing(6);
@@ -129,7 +130,7 @@ public:
 
         gridLayout_11->addWidget(gridFrame_4, 3, 0, 1, 1);
 
-        gridFrame_6 = new QFrame(widget);
+        gridFrame_6 = new QFrame(layoutWidget);
         gridFrame_6->setObjectName(QStringLiteral("gridFrame_6"));
         gridLayout_6 = new QGridLayout(gridFrame_6);
         gridLayout_6->setSpacing(6);
@@ -139,7 +140,7 @@ public:
 
         gridLayout_11->addWidget(gridFrame_6, 3, 4, 1, 1);
 
-        gridFrame_7 = new QFrame(widget);
+        gridFrame_7 = new QFrame(layoutWidget);
         gridFrame_7->setObjectName(QStringLiteral("gridFrame_7"));
         gridLayout_7 = new QGridLayout(gridFrame_7);
         gridLayout_7->setSpacing(6);
@@ -149,7 +150,7 @@ public:
 
         gridLayout_11->addWidget(gridFrame_7, 6, 0, 1, 1);
 
-        gridFrame_2 = new QFrame(widget);
+        gridFrame_2 = new QFrame(layoutWidget);
         gridFrame_2->setObjectName(QStringLiteral("gridFrame_2"));
         gridLayout_2 = new QGridLayout(gridFrame_2);
         gridLayout_2->setSpacing(6);
@@ -159,14 +160,14 @@ public:
 
         gridLayout_11->addWidget(gridFrame_2, 0, 2, 1, 1);
 
-        line_3 = new QFrame(widget);
+        line_3 = new QFrame(layoutWidget);
         line_3->setObjectName(QStringLiteral("line_3"));
         line_3->setFrameShape(QFrame::VLine);
         line_3->setFrameShadow(QFrame::Sunken);
 
         gridLayout_11->addWidget(line_3, 0, 1, 1, 1);
 
-        gridFrame_5 = new QFrame(widget);
+        gridFrame_5 = new QFrame(layoutWidget);
         gridFrame_5->setObjectName(QStringLiteral("gridFrame_5"));
         gridLayout_5 = new QGridLayout(gridFrame_5);
         gridLayout_5->setSpacing(6);
@@ -176,7 +177,7 @@ public:
 
         gridLayout_11->addWidget(gridFrame_5, 3, 2, 1, 1);
 
-        gridFrame_9 = new QFrame(widget);
+        gridFrame_9 = new QFrame(layoutWidget);
         gridFrame_9->setObjectName(QStringLiteral("gridFrame_9"));
         gridLayout_9 = new QGridLayout(gridFrame_9);
         gridLayout_9->setSpacing(6);
@@ -186,21 +187,21 @@ public:
 
         gridLayout_11->addWidget(gridFrame_9, 6, 4, 1, 1);
 
-        line = new QFrame(widget);
+        line = new QFrame(layoutWidget);
         line->setObjectName(QStringLiteral("line"));
         line->setFrameShape(QFrame::HLine);
         line->setFrameShadow(QFrame::Sunken);
 
         gridLayout_11->addWidget(line, 1, 0, 1, 5);
 
-        line_2 = new QFrame(widget);
+        line_2 = new QFrame(layoutWidget);
         line_2->setObjectName(QStringLiteral("line_2"));
         line_2->setFrameShape(QFrame::HLine);
         line_2->setFrameShadow(QFrame::Sunken);
 
         gridLayout_11->addWidget(line_2, 4, 0, 1, 5);
 
-        gridFrame_3 = new QFrame(widget);
+        gridFrame_3 = new QFrame(layoutWidget);
         gridFrame_3->setObjectName(QStringLiteral("gridFrame_3"));
         gridLayout_3 = new QGridLayout(gridFrame_3);
         gridLayout_3->setSpacing(6);
@@ -210,27 +211,30 @@ public:
 
         gridLayout_11->addWidget(gridFrame_3, 0, 4, 1, 1);
 
-        line_4 = new QFrame(widget);
+        line_4 = new QFrame(layoutWidget);
         line_4->setObjectName(QStringLiteral("line_4"));
         line_4->setFrameShape(QFrame::VLine);
         line_4->setFrameShadow(QFrame::Sunken);
 
         gridLayout_11->addWidget(line_4, 0, 3, 1, 1);
 
-        line_7 = new QFrame(widget);
+        line_7 = new QFrame(layoutWidget);
         line_7->setObjectName(QStringLiteral("line_7"));
         line_7->setFrameShape(QFrame::VLine);
         line_7->setFrameShadow(QFrame::Sunken);
 
         gridLayout_11->addWidget(line_7, 6, 1, 1, 1);
 
-        line_8 = new QFrame(widget);
+        line_8 = new QFrame(layoutWidget);
         line_8->setObjectName(QStringLiteral("line_8"));
         line_8->setFrameShape(QFrame::VLine);
         line_8->setFrameShadow(QFrame::Sunken);
 
         gridLayout_11->addWidget(line_8, 6, 3, 1, 1);
 
+        predictor = new QLabel(centralWidget);
+        predictor->setObjectName(QStringLiteral("predictor"));
+        predictor->setGeometry(QRect(46, 650, 221, 20));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -253,6 +257,7 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
         announce->setText(QApplication::translate("MainWindow", "Announcement", 0));
         playAgain->setText(QApplication::translate("MainWindow", "Click to Play Again", 0));
+        predictor->setText(QApplication::translate("MainWindow", "nope.avi", 0));
     } // retranslateUi
 
 };

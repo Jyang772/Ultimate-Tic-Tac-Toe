@@ -70,6 +70,7 @@ public:
                         "go first. Otherwise, select 'O'. </span></p></body></html>", 0));
         chooseX->setText(QApplication::translate("Dialog", "X", 0));
         chooseY->setText(QApplication::translate("Dialog", "O", 0));
+        lineEdit->setText(QApplication::translate("Dialog", "2", 0));
         label->setText(QApplication::translate("Dialog", "Strength:", 0));
     } // retranslateUi
 

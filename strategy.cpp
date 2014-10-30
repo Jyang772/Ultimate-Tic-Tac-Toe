@@ -86,3 +86,4 @@
 //    qDebug() << "triad_sum: " << triad_sum;
 //    triad_sum = 0;
 //}
+

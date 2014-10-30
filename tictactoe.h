@@ -16,6 +16,7 @@ const int EMPTY = 0;
 
 //int DEPTH_LIMIT = 2;
 const int VERY_LARGE = 2000000;
+const int THRESHOLD = VERY_LARGE/2;
 
 
 
@@ -59,7 +60,7 @@ public:
     int winningRows[3];
 
 
-    void setDepth(int strength);
+    void setDepth(int strength = 2);
 
     bool isLegal(int move, int currentGrid) const;
 
@@ -69,7 +70,7 @@ public:
     char gridChar(int i);
 
     //Ultimate
-    int CalculateGrid(int currentGrid);
+    int CalculateGrid(int currentGrid,int player);
     void setGridState(int grid, int winner);
     int ultWin();
 
@@ -79,7 +80,7 @@ public:
 
 
     //Fundamental Ultimate Tic-Tac-Toe
-    int pickMove(int,int&);
+    int pickMove(int,int,int&);
     void utility(int,int,int);
     int alphaBeta(std::vector<int>& board,int last_slot,int player, int next_player,int alpha, int beta, int depth, int score_so_far, int last_move_won);
 
@@ -87,6 +88,7 @@ public:
 signals:
     void humanMoves();
     void computerMove(int,int);
+    void prediction(QString);
 
 public slots:
     void humanMove(int,int currentGrid);
