@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setUpGrid();
 
 
-    connect(options,SIGNAL(choosen()),this,SLOT(begin()));
+    connect(options,SIGNAL(choosen(int)),this,SLOT(begin(int)));
     connect(game,SIGNAL(humanMoves()),this,SLOT(humanMoves()));
     connect(game,SIGNAL(computerMove(int,int)),this,SLOT(computerMove(int,int)));
 
@@ -158,11 +158,14 @@ void MainWindow::itemClicked(){
         invalidMove();
 }
 
-void MainWindow::begin(){
+void MainWindow::begin(int strength){
     //Sets player character. Calls TicTacToe::Play()
     //The Game begins.
 
     QString text = "You are playing as " + QString(QChar(options->getChar()));
+    this->strength = strength;
+    game->setDepth(strength);
+
     if(options->getChar() == 'O'){
         text.append(". Computer moves first.");
         player = 1;
@@ -264,7 +267,7 @@ void MainWindow::on_playAgain_clicked()
         itemButtons[4][i]->setText("");
 
     game->reset();
-    begin();
+    begin(strength);
 
     ui->playAgain->setVisible(false);
 

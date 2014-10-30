@@ -14,8 +14,9 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QDialog>
-#include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QTextBrowser>
 
@@ -24,21 +25,17 @@ QT_BEGIN_NAMESPACE
 class Ui_Dialog
 {
 public:
-    QDialogButtonBox *buttonBox;
     QTextBrowser *textBrowser;
     QPushButton *chooseX;
     QPushButton *chooseY;
+    QLineEdit *lineEdit;
+    QLabel *label;
 
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
             Dialog->setObjectName(QStringLiteral("Dialog"));
         Dialog->resize(400, 300);
-        buttonBox = new QDialogButtonBox(Dialog);
-        buttonBox->setObjectName(QStringLiteral("buttonBox"));
-        buttonBox->setGeometry(QRect(30, 240, 341, 32));
-        buttonBox->setOrientation(Qt::Horizontal);
-        buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
         textBrowser = new QTextBrowser(Dialog);
         textBrowser->setObjectName(QStringLiteral("textBrowser"));
         textBrowser->setGeometry(QRect(20, 30, 331, 91));
@@ -48,10 +45,14 @@ public:
         chooseY = new QPushButton(Dialog);
         chooseY->setObjectName(QStringLiteral("chooseY"));
         chooseY->setGeometry(QRect(200, 140, 121, 91));
+        lineEdit = new QLineEdit(Dialog);
+        lineEdit->setObjectName(QStringLiteral("lineEdit"));
+        lineEdit->setGeometry(QRect(130, 250, 113, 27));
+        label = new QLabel(Dialog);
+        label->setObjectName(QStringLiteral("label"));
+        label->setGeometry(QRect(60, 240, 67, 41));
 
         retranslateUi(Dialog);
-        QObject::connect(buttonBox, SIGNAL(accepted()), Dialog, SLOT(accept()));
-        QObject::connect(buttonBox, SIGNAL(rejected()), Dialog, SLOT(reject()));
 
         QMetaObject::connectSlotsByName(Dialog);
     } // setupUi
@@ -69,6 +70,7 @@ public:
                         "go first. Otherwise, select 'O'. </span></p></body></html>", 0));
         chooseX->setText(QApplication::translate("Dialog", "X", 0));
         chooseY->setText(QApplication::translate("Dialog", "O", 0));
+        label->setText(QApplication::translate("Dialog", "Strength:", 0));
     } // retranslateUi
 
 };

@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[9];
-    char stringdata[101];
+    QByteArrayData data[10];
+    char stringdata[110];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -34,14 +34,15 @@ QT_MOC_LITERAL(1, 11, 12),
 QT_MOC_LITERAL(2, 24, 0),
 QT_MOC_LITERAL(3, 25, 11),
 QT_MOC_LITERAL(4, 37, 5),
-QT_MOC_LITERAL(5, 43, 10),
-QT_MOC_LITERAL(6, 54, 11),
-QT_MOC_LITERAL(7, 66, 12),
-QT_MOC_LITERAL(8, 79, 20)
+QT_MOC_LITERAL(5, 43, 8),
+QT_MOC_LITERAL(6, 52, 10),
+QT_MOC_LITERAL(7, 63, 11),
+QT_MOC_LITERAL(8, 75, 12),
+QT_MOC_LITERAL(9, 88, 20)
     },
     "MainWindow\0turnComplete\0\0itemClicked\0"
-    "begin\0humanMoves\0invalidMove\0computerMove\0"
-    "on_playAgain_clicked\0"
+    "begin\0strength\0humanMoves\0invalidMove\0"
+    "computerMove\0on_playAgain_clicked\0"
 };
 #undef QT_MOC_LITERAL
 
@@ -63,18 +64,18 @@ static const uint qt_meta_data_MainWindow[] = {
 
  // slots: name, argc, parameters, tag, flags
        3,    0,   52,    2, 0x08,
-       4,    0,   53,    2, 0x08,
-       5,    0,   54,    2, 0x08,
-       6,    0,   55,    2, 0x08,
-       7,    2,   56,    2, 0x08,
-       8,    0,   61,    2, 0x08,
+       4,    1,   53,    2, 0x08,
+       6,    0,   56,    2, 0x08,
+       7,    0,   57,    2, 0x08,
+       8,    2,   58,    2, 0x08,
+       9,    0,   63,    2, 0x08,
 
  // signals: parameters
     QMetaType::Void, QMetaType::Int,    2,
 
  // slots: parameters
     QMetaType::Void,
-    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,    5,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int, QMetaType::Int,    2,    2,
@@ -90,7 +91,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         switch (_id) {
         case 0: _t->turnComplete((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 1: _t->itemClicked(); break;
-        case 2: _t->begin(); break;
+        case 2: _t->begin((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 3: _t->humanMoves(); break;
         case 4: _t->invalidMove(); break;
         case 5: _t->computerMove((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;

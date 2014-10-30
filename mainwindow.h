@@ -35,7 +35,7 @@ signals:
 
 private slots:
     void itemClicked();
-    void begin();
+    void begin(int strength);
 
     void humanMoves();
     void invalidMove();
@@ -58,6 +58,7 @@ private:
 
     TicTacToe *game = new TicTacToe();
 
+    int strength;
     bool humanTurn;
 
     int currentGrid = -1;

@@ -20,14 +20,16 @@ Dialog::~Dialog()
 void Dialog::on_chooseX_clicked()
 {
     choosenChar = 'X';
-    emit choosen();
+    strength = ui->lineEdit->text().toInt();
+    emit choosen(strength);
     close();
 }
 
 void Dialog::on_chooseY_clicked()
 {
     choosenChar = 'O';
-    emit choosen();
+    strength = ui->lineEdit->text().toInt();
+    emit choosen(strength);
     close();
 }
 

@@ -14,7 +14,7 @@ const char TIE = 'T';
 const char NO_ONE = 'N';
 const int EMPTY = 0;
 
-const int DEPTH_LIMIT = 2;
+//int DEPTH_LIMIT = 2;
 const int VERY_LARGE = 2000000;
 
 
@@ -51,12 +51,15 @@ class TicTacToe : public QObject
 public:
     explicit TicTacToe(QObject *parent = 0);
 
+    int DEPTH_LIMIT = 2;
+
 
     int human = -1;
     int turn;
     int winningRows[3];
 
 
+    void setDepth(int strength);
 
     bool isLegal(int move, int currentGrid) const;
 

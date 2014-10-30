@@ -16,12 +16,16 @@ TicTacToe::TicTacToe(QObject *parent) : QObject(parent)
 
 }
 
+void TicTacToe::setDepth(int strength){
+    DEPTH_LIMIT = strength;
+    qDebug() << "DepthLimit: " << DEPTH_LIMIT;
+}
+
 void TicTacToe::humanMove(int move,int currentGrid){
 
     boards[currentGrid][move] = human;
 
 }
-
 
 bool TicTacToe::isLegal(int move,int currentGrid) const{
 

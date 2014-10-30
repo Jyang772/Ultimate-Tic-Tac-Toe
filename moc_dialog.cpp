@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_Dialog_t {
-    QByteArrayData data[5];
-    char stringdata[55];
+    QByteArrayData data[6];
+    char stringdata[64];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -32,10 +32,11 @@ static const qt_meta_stringdata_Dialog_t qt_meta_stringdata_Dialog = {
 QT_MOC_LITERAL(0, 0, 6),
 QT_MOC_LITERAL(1, 7, 7),
 QT_MOC_LITERAL(2, 15, 0),
-QT_MOC_LITERAL(3, 16, 18),
-QT_MOC_LITERAL(4, 35, 18)
+QT_MOC_LITERAL(3, 16, 8),
+QT_MOC_LITERAL(4, 25, 18),
+QT_MOC_LITERAL(5, 44, 18)
     },
-    "Dialog\0choosen\0\0on_chooseX_clicked\0"
+    "Dialog\0choosen\0\0strength\0on_chooseX_clicked\0"
     "on_chooseY_clicked\0"
 };
 #undef QT_MOC_LITERAL
@@ -54,14 +55,14 @@ static const uint qt_meta_data_Dialog[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    0,   29,    2, 0x06,
+       1,    1,   29,    2, 0x06,
 
  // slots: name, argc, parameters, tag, flags
-       3,    0,   30,    2, 0x08,
-       4,    0,   31,    2, 0x08,
+       4,    0,   32,    2, 0x08,
+       5,    0,   33,    2, 0x08,
 
  // signals: parameters
-    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,    3,
 
  // slots: parameters
     QMetaType::Void,
@@ -75,7 +76,7 @@ void Dialog::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
     if (_c == QMetaObject::InvokeMetaMethod) {
         Dialog *_t = static_cast<Dialog *>(_o);
         switch (_id) {
-        case 0: _t->choosen(); break;
+        case 0: _t->choosen((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 1: _t->on_chooseX_clicked(); break;
         case 2: _t->on_chooseY_clicked(); break;
         default: ;
@@ -84,13 +85,12 @@ void Dialog::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         int *result = reinterpret_cast<int *>(_a[0]);
         void **func = reinterpret_cast<void **>(_a[1]);
         {
-            typedef void (Dialog::*_t)();
+            typedef void (Dialog::*_t)(int );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&Dialog::choosen)) {
                 *result = 0;
             }
         }
     }
-    Q_UNUSED(_a);
 }
 
 const QMetaObject Dialog::staticMetaObject = {
@@ -130,8 +130,9 @@ int Dialog::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void Dialog::choosen()
+void Dialog::choosen(int _t1)
 {
-    QMetaObject::activate(this, &staticMetaObject, 0, 0);
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 QT_END_MOC_NAMESPACE

@@ -19,7 +19,7 @@ public:
     ~Dialog();
 
 signals:
-    void choosen();
+    void choosen(int strength);
 
 
 private slots:
@@ -31,6 +31,7 @@ private slots:
 private:
     Ui::Dialog *ui;
     char choosenChar;
+    int strength;
     //QVBoxLayout *layout = new QVBoxLayout;
 
 };
