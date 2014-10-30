@@ -83,6 +83,9 @@ int TicTacToe::winner(int currentGrid){
                 (boards[currentGrid][WINNING_ROWS[row][0]] == boards[currentGrid][WINNING_ROWS[row][1]]) &&
                 (boards[currentGrid][WINNING_ROWS[row][1]] == boards[currentGrid][WINNING_ROWS[row][2]]) )
         {
+            winningRows[0] = WINNING_ROWS[row][0];
+            winningRows[1] = WINNING_ROWS[row][1];
+            winningRows[2] = WINNING_ROWS[row][2];
             return boards[currentGrid][WINNING_ROWS[row][0]]; //Return the character that has won
         }
     }
@@ -175,11 +178,28 @@ char TicTacToe::gridChar(int i) {
 
 int TicTacToe::CalculateGrid(int currentGrid){
 
-    //qDebug() << "TEST FUNCTION RESULTS: " << pickMove(currentGrid) << endl;
+    //If a player forces the computer to a score that has already been won...welp.
+    //Computer gets to pick whichever grid he wants. 2 guud 4 uuu
+    int test;
+    if(gridStates[currentGrid] != EMPTY){
+        qDebug() << "NOT EMPTY" << endl << endl;
+        int move,best,bestscore = -20000;
+        for(int i=0; i<9; i++){
+            qDebug() << "looping";
+            if((i != currentGrid)){
+                move = pickMove(i,best);
+                qDebug() << "best: " << best;
+                if(best > bestscore){
+                    qDebug() << "move: " << move << " i: " << i;
+                    emit computerMove(move,i);
+                    return 20;
+                }
+            }
+        }
+    }
 
-    //qDebug() << "CurrentGrid: " << currentGrid << endl;
 
-    int movetomake = pickMove(currentGrid);
+    int movetomake = pickMove(currentGrid,test);
 
     boards[currentGrid][movetomake] = 1;
     emit computerMove(movetomake,currentGrid);
@@ -364,10 +384,7 @@ void TicTacToe::utility(std::vector<int>& board,int currentGrid,int move,int dep
 }
 
 
-
-
-
-int TicTacToe::pickMove(int currentGrid){
+int TicTacToe::pickMove(int currentGrid,int& best){
 
     int score = 0;
     int bestScore = -VERY_LARGE - DEPTH_LIMIT;
@@ -411,15 +428,14 @@ int TicTacToe::pickMove(int currentGrid){
     }
     else{
         rv = my_moves.back();
-        if(my_moves.size() > 1){
-            //Choose a move at random.
-        }
+
 
     }
 
 
     qDebug() << "Ultimate move: " << rv << endl;
-
+    qDebug() << "score: " << score;
+    best = score;
     return rv;
 
 }

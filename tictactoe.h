@@ -59,6 +59,7 @@ public:
 
     int human;
     int turn;
+    int winningRows[3];
 
     void reset();
 
@@ -76,7 +77,7 @@ public:
     void utility(std::vector<int>& board,int,int,int);
     int alphaBeta(std::vector<int>& board,int last_slot,int player, int next_player,int alpha, int beta, int depth, int score_so_far, int last_move_won);
 
-    int pickMove(int);
+    int pickMove(int,int&);
 
 signals:
     void humanMoves();
@@ -88,6 +89,9 @@ public slots:
 private:
     //Compiler derps with initialization of aggregate members
     //std::vector<char> board{std::vector<char>(NUM_SQUARES,EMPTY)};
+
+
+    int wonGrids[9] = {};
     std::vector<int> board = std::vector<int>(NUM_SQUARES,EMPTY);
     std::vector<int> gridStates = std::vector<int>(NUM_SQUARES,EMPTY);                            //Keep track of Grids that have been completed. Stores either 0,-1,1
 

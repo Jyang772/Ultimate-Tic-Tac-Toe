@@ -34,6 +34,17 @@ void MainWindow::setUpGrid(){
 
 
 
+    frames[0] = ui->gridFrame;
+    frames[1] = ui->gridFrame_2;
+    frames[2] = ui->gridFrame_3;
+    frames[3] = ui->gridFrame_4;
+    frames[4] = ui->gridFrame_5;
+    frames[5] = ui->gridFrame_6;
+    frames[6] = ui->gridFrame_7;
+    frames[7] = ui->gridFrame_8;
+    frames[8] = ui->gridFrame_9;
+
+
     layouts[0] = ui->gridLayout;
     layouts[0]->parent()->setObjectName(QString::number(0));
     layouts[1] = ui->gridLayout_2;
@@ -116,21 +127,19 @@ void MainWindow::itemClicked(){
 
     QPushButton *clickedItem = qobject_cast<QPushButton*>(sender());
 
-    qDebug() << "objectName: " << clickedItem->parent()->objectName();
-
-    qDebug() << "ItemClicked: " << clickedItem->objectName().toInt();
-    qDebug() << "currentGrid: " << currentGrid << endl;
-    qDebug() << "nextGrid: " << nextGrid << endl;
     clickedItem->setAutoExclusive(false);
     clickedItem->setChecked(false);
     clickedItem->setAutoExclusive(true);
 
     currentGrid = clickedItem->parent()->objectName().toInt();
 
-
+    if(currentGrid != nextGrid && nextGrid != -1){
+        invalidMove();
+        return;
+    }
 
     //Read user symbol, and set button to that symbol
-    if(humanTurn && game->isLegal(clickedItem->objectName().toInt(),currentGrid)){
+    if(humanTurn && game->isLegal(clickedItem->objectName().toInt(),currentGrid) && !wonGrids[currentGrid]){
         clickedItem->setText(QString(QChar(game->gridChar(game->human))));
 
         game->humanMove(clickedItem->objectName().toInt(),currentGrid);
@@ -153,28 +162,17 @@ void MainWindow::begin(){
 
     QString text = "You are playing as " + QString(QChar(options->getChar()));
     if(options->getChar() == 'O'){
-
         text.append(". Computer moves first.");
-        //game->human = 'O';
         game->human = -1;
-
-        //Computer makes move
-        //game->computerMove(game->opponent(game->human));
         game->computerMax();
     }
     else{
         text.append(". Select a square.");
-        //game->human = 'X';
         game->human = -1;
         humanTurn = true;
     }
 
     ui->announce->setText(text);
-
-
-    //Begin game
-    //game->Play();
-
 
 }
 
@@ -185,22 +183,28 @@ void MainWindow::humanMoves(){
 }
 
 void MainWindow::computerMove(int move,int grid){
-    qDebug() << "ComputerMove: " << move;
-    qDebug() << "nextGrid: " << nextGrid;
-    qDebug() << "grid: " << grid;
 
-    if(grid != -1)
-        nextGrid = grid;
+
+//    if(grid != -1)
+//        nextGrid = grid;
+
+    qDebug() << "NEXTGRID: " << grid;
 
 
     humanTurn = false;
     itemButtons[nextGrid][move]->setText(QString(QChar(game->gridChar(game->opponent(game->human)))));
 
+    colorBoard(nextGrid,move);
+
     //Check if computer has won
     CheckWinner();
 
+    //If not, then player's next move will be
     nextGrid = move;
+
     qDebug() << "Player must move here: " << nextGrid;
+
+
 }
 
 void MainWindow::CheckWinner(){
@@ -212,6 +216,9 @@ void MainWindow::CheckWinner(){
         game->setGridState(nextGrid,game->human);
         ui->announce->setText("You have won!");
         humanTurn = false; //Disable clicking
+
+        wonGrids[nextGrid] = -1;
+        colorBoardWin(nextGrid,1);
         ui->playAgain->setVisible(true);
         //return;
     }
@@ -219,8 +226,11 @@ void MainWindow::CheckWinner(){
         game->setGridState(nextGrid,1);
         ui->announce->setText("You have lost!");
         qDebug() << "COMPUTER WON AT " << nextGrid;
+
+        wonGrids[nextGrid] = 1;
+        colorBoardWin(nextGrid,-1);
+
         ui->playAgain->setVisible(true);
-        //return;
     }
     else if(game->winner(nextGrid) == 0){
         announce = "TIE! on board" + QString::number(currentGrid);
@@ -235,10 +245,9 @@ void MainWindow::CheckWinner(){
     else if(game->ultWin() == game->opponent(game->human))
         qDebug() << "COMPUTER WIN";
 
-    if(humanTurn)
+    if(humanTurn){
         game->CalculateGrid(nextGrid);
-        //game->computerMax();
-    //game->computerMove(game->opponent(game->human));
+    }
     else{
         humanMoves();
     }
@@ -261,3 +270,46 @@ void MainWindow::on_playAgain_clicked()
     ui->playAgain->setVisible(false);
 
 }
+
+
+void MainWindow::colorBoard(int nextGrid, int move){
+
+    //itemButtons[nextGrid][move]->setStyleSheet("background-color: red");
+
+    for(int i=0; i<9; i++){
+        frames[i]->setStyleSheet("background-color: none");
+    }
+
+
+
+    //Sets computer move's background color
+    QPushButton* button = itemButtons[nextGrid][move];
+    QPalette pal = button->palette();
+    pal.setColor(QPalette::Button, QColor(Qt::blue));
+    button->setAutoFillBackground(true);
+    button->setPalette(pal);
+    button->update();
+
+    frames[move]->setStyleSheet("background-color: lightgreen");
+}
+
+void MainWindow::colorBoardWin(int nextGrid,int player){
+
+
+
+    if(player == -1){
+        itemButtons[nextGrid][game->winningRows[0]]->setStyleSheet("background-color: pink");
+        itemButtons[nextGrid][game->winningRows[1]]->setStyleSheet("background-color: pink");
+        itemButtons[nextGrid][game->winningRows[2]]->setStyleSheet("background-color: pink");
+    }
+    else{
+        itemButtons[nextGrid][game->winningRows[0]]->setStyleSheet("background-color: lightblue");
+        itemButtons[nextGrid][game->winningRows[1]]->setStyleSheet("background-color: lightblue");
+        itemButtons[nextGrid][game->winningRows[2]]->setStyleSheet("background-color: lightblue");
+    }
+
+
+
+}
+
+

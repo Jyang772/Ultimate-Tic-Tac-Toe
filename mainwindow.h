@@ -24,6 +24,9 @@ public:
     void Play();
     void CheckWinner();
 
+    void colorBoard(int nextGrid, int move);
+    void colorBoardWin(int nextGrid,int player);
+
     ~MainWindow();
 
 signals:
@@ -46,6 +49,9 @@ private:
 
     QPushButton *itemButtons[9][9];
     QGridLayout *layouts[9];
+    QFrame *frames[9];
+
+
 
     QPushButton *createButton(QString&, const QString/*const char**/);
 
@@ -53,8 +59,16 @@ private:
 
     bool humanTurn;
 
-    int currentGrid = 0;
-    int nextGrid = 0;
+    int currentGrid = -1;
+    int nextGrid = -1;
+
+
+    int wonGrids[9] = {};
+
+
+    int previousMove[2] = {-1,-1};  //Stores currentGrid, move
+
+
 
 };
 
