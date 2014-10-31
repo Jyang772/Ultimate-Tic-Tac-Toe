@@ -306,6 +306,8 @@ int TicTacToe::pickMove(int currentGrid,int player, int& best){
         emit prediction(QString("Predict Computer Wins."));
     else if(bestScore < -THRESHOLD)
         emit prediction(QString("Predict Human Wins."));
+    else
+        emit prediction(QString("Score: " + QString::number(score)));
 
 
     qDebug() << "Ultimate move: " << rv << endl;

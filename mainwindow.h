@@ -22,7 +22,7 @@ public:
     void setUpGrid();
     void setChar(char);
     void Play();
-    void CheckWinner();
+    void CheckWinner(int currentGrid);
 
     void colorBoard(int nextGrid, int move);
     void colorBoardWin(int nextGrid,int player);

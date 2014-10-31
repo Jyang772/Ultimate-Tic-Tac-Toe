@@ -150,9 +150,12 @@ void MainWindow::itemClicked(){
 
 
         //Change player
-        player = 1;
         //Check if player has won.
-        CheckWinner();
+
+
+        CheckWinner(currentGrid);
+        player = 1;
+
         nextGrid = clickedItem->objectName().toInt();                             //next move for computer will need to be where player sent it to.
 
 
@@ -217,7 +220,7 @@ void MainWindow::computerMove(int move,int grid){
     colorBoard(nextGrid,move);
 
     //Check if computer has won
-    CheckWinner();
+    CheckWinner(nextGrid);
 
     //If not, then player's next move will be
     nextGrid = move;
@@ -231,22 +234,22 @@ void MainWindow::computerMove(int move,int grid){
 }
 
 
-void MainWindow::CheckWinner(){
+void MainWindow::CheckWinner(int grid){
 
     QString announce;
-    if(game->winner(nextGrid) == -1){
-        game->setGridState(nextGrid,-1);
+    if(game->winner(grid) == -1){
+        game->setGridState(grid,-1);
 
-        qDebug() << "PLAYER WON AT " << nextGrid;
+        qDebug() << "PLAYER WON AT " << grid;
 
         humanTurn = false; //Disable clicking
 
-        wonGrids[nextGrid] = -1;
-        colorBoardWin(nextGrid,-1);
+        wonGrids[grid] = -1;
+        colorBoardWin(grid,-1);
 
         ui->playAgain->setVisible(true);
     }
-    else if(game->winner(nextGrid) == 1){
+    else if(game->winner(grid) == 1){
         game->setGridState(nextGrid,1);
 
         qDebug() << "COMPUTER WON AT " << nextGrid;
@@ -256,7 +259,7 @@ void MainWindow::CheckWinner(){
 
         ui->playAgain->setVisible(true);
     }
-    else if(game->winner(nextGrid) == 0){
+    else if(game->winner(grid) == 0){
 
         announce = "TIE! on board" + QString::number(currentGrid);
 
