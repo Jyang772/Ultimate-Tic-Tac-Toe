@@ -61,6 +61,7 @@ public:
     QFrame *line_7;
     QFrame *line_8;
     QLabel *predictor;
+    QLabel *timer;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -234,7 +235,10 @@ public:
 
         predictor = new QLabel(centralWidget);
         predictor->setObjectName(QStringLiteral("predictor"));
-        predictor->setGeometry(QRect(46, 650, 221, 20));
+        predictor->setGeometry(QRect(40, 620, 221, 20));
+        timer = new QLabel(centralWidget);
+        timer->setObjectName(QStringLiteral("timer"));
+        timer->setGeometry(QRect(30, 660, 191, 17));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -258,6 +262,7 @@ public:
         announce->setText(QApplication::translate("MainWindow", "Announcement", 0));
         playAgain->setText(QApplication::translate("MainWindow", "Click to Play Again", 0));
         predictor->setText(QApplication::translate("MainWindow", "nope.avi", 0));
+        timer->setText(QApplication::translate("MainWindow", "Move timer: none", 0));
     } // retranslateUi
 
 };

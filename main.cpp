@@ -1,21 +1,53 @@
 #include "mainwindow.h"
 #include <QApplication>
 
+
+void play();
+
+
+
+
 int main(int argc, char *argv[])
 {
-    //std::cout << argv[1] << std::endl;
 
-    //if(argc == 2 && !strcmp(argv[1],"-win")){
     if(true){
     QApplication a(argc, argv);
 
     MainWindow w;
     w.show();
 
-//    int nextGrid = -1;
-//    for(int i=0; i<22;i++){
-//    nextGrid = w.computer(nextGrid);
+
+
+
+//    bool winner = false;
+//    int currentGrid = -1;
+//    w.player = -1;
+
+
+//    while(!winner){
+
+//        if(w.player == -1){
+//            w.begin(2);
+//            w.humanMoves();
+
+//           //currentGrid = w.itemClicked();
+
+//            w.player = 1;
+//        }
+//        else{
+//            w.computer(currentGrid);
+//            w.player = -1;
+//        }
+
+
+//        //Check for winner every turn
+//        w.CheckWinner(currentGrid);
 //    }
+
+
+
+
+
 
     return a.exec();
     }
@@ -26,6 +58,35 @@ int main(int argc, char *argv[])
 
         //Do stuff
     }
+
+
+}
+
+void play(){
+
+
+//    bool winner = false;
+//    int currentGrid;
+
+
+//    while(!winner){
+
+//        if(w.player == -1){
+//            w.humanMoves();
+
+//            currentGrid = w.itemClicked();
+
+//            w.player = 1;
+//        }
+//        else{
+//            w.computer(currentGrid);
+//            w.player = -1;
+//        }
+
+
+//        //Check for winner every turn
+//        w.CheckWinner(currentGrid);
+//    }
 
 
 }

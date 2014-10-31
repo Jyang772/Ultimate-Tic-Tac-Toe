@@ -8,6 +8,9 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include <QDebug>
+#include <QThread>
+#include <QtConcurrent>
+#include <QFuture>
 
 namespace Ui {
 class MainWindow;
@@ -18,6 +21,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    int player = 1; //Keeps track of current
+
+
     explicit MainWindow(QWidget *parent = 0);
     void setUpGrid();
     void setChar(char);
@@ -28,21 +34,25 @@ public:
     void colorBoardWin(int nextGrid,int player);
     void colorBoardUltimateWin(int player);
 
+    void computer(int grid, int player);
     ~MainWindow();
 
 signals:
     void turnComplete(int);
+    void computer_(int,int player);
 
 public slots:
-    int computer(int grid);
+    int itemClicked();
+    void humanMoves();
+
+    //void computer(int grid,int player);
     void prediction(QString);
+
 
 private slots:
 
-    void itemClicked();
     void begin(int strength);
 
-    void humanMoves();
     void invalidMove();
     void computerMove(int,int);
 
@@ -72,12 +82,12 @@ private:
 
     int wonGrids[9] = {};
     int previousMove[2] = {-1,-1};  //Stores currentGrid, move
-    int player = 1; //Keeps track of current
 
 
     int test = -1;
 
 
+    QThread *pthread = new QThread();
 
 };
 

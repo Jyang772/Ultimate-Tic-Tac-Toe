@@ -271,6 +271,7 @@ int TicTacToe::pickMove(int currentGrid,int player, int& best){
                 bestScore = score;
                 my_moves.clear();
                 my_moves.push_back(slot);
+
             }
             else if(score == bestScore){
                 my_moves.push_back(slot);
@@ -292,14 +293,14 @@ int TicTacToe::pickMove(int currentGrid,int player, int& best){
     else{
         rv = my_moves.back();
 
-//        if(my_moves.size() > 1){
-//                int r = std::rand() % my_moves.size();
-//                rv = my_moves[r];
+        if(my_moves.size() > 1){
+            int r = std::rand() % my_moves.size();
+            rv = my_moves[r];
 
-//                for(auto i : my_moves)
-//                    qDebug() << "MMOVES!!: " << i;
-//                qDebug() << "Move chosen: " <<  rv;
-//        }
+            for(auto i : my_moves)
+                qDebug() << "MMOVES!!: " << i;
+            qDebug() << "Move chosen: " <<  rv;
+        }
     }
 
     if(bestScore > THRESHOLD)

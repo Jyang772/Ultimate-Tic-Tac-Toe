@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QThread>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -18,11 +18,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setUpGrid();
 
+    game->moveToThread(pthread);
+
 
     connect(options,SIGNAL(choosen(int)),this,SLOT(begin(int)));
     connect(game,SIGNAL(humanMoves()),this,SLOT(humanMoves()));
     connect(game,SIGNAL(computerMove(int,int)),this,SLOT(computerMove(int,int)));
     connect(game,SIGNAL(prediction(QString)),this,SLOT(prediction(QString)));
+
+    //connect(this,SIGNAL(computer_(int,int)),this,SLOT(computer(int,int)));
+
+    pthread->start();
 }
 
 MainWindow::~MainWindow()
@@ -123,7 +129,7 @@ QPushButton *MainWindow::createButton(QString &text, const QString member/*const
     return button;
 }
 
-void MainWindow::itemClicked(){
+int MainWindow::itemClicked(){
     //Slot for when a tile has been clicked.
 
     QPushButton *clickedItem = qobject_cast<QPushButton*>(sender());
@@ -137,7 +143,7 @@ void MainWindow::itemClicked(){
     if(currentGrid != nextGrid && nextGrid != -1 && !wonGrids[nextGrid]){
         qDebug() << "NOPE";
         invalidMove();
-        return;
+        return -1;
     }
 
     //Read user symbol, and set button to that symbol
@@ -145,12 +151,7 @@ void MainWindow::itemClicked(){
 
         clickedItem->setText(QString(QChar(game->gridChar(game->human))));        //Sets pushbutton text to player's char.
 
-
         game->humanMove(clickedItem->objectName().toInt(),currentGrid);           //Sets subBoard with player's char
-
-
-        //Change player
-        //Check if player has won.
 
 
         CheckWinner(currentGrid);
@@ -159,7 +160,10 @@ void MainWindow::itemClicked(){
         nextGrid = clickedItem->objectName().toInt();                             //next move for computer will need to be where player sent it to.
 
 
-        game->CalculateGrid(nextGrid,1);
+       // emit computer_(nextGrid,1);
+        QFuture<void> future = QtConcurrent::run(this,&MainWindow::computer,nextGrid,1);
+        //game->CalculateGrid(nextGrid,1);
+        qDebug() << "RETURN: ";
 
     }
     else if(!game->isLegal(clickedItem->objectName().toInt(),currentGrid))
@@ -374,19 +378,23 @@ void MainWindow::colorBoardUltimateWin(int player){
     //for(int i=0; i<)
 }
 
-int MainWindow::computer(int grid){
+void MainWindow::computer(int grid,int player){
 
-    qDebug() << "Player__: " << player;
-    int current;
-    if(grid == -1 && nextGrid == -1){
-        current = 4;
-        nextGrid = 4;
-    }
-
-
-
+    double time;
+    humanTurn = false; //Prevent random clicking
+    QTime myTimer;
+    myTimer.start();
+    //Qtconcurrent::run();
+    ui->announce->setText("Thinking...");
     game->CalculateGrid(nextGrid,player);
-    return nextGrid;
+
+    time = myTimer.elapsed();
+
+    ui->timer->setText("Move took: " + QString::number(time/1000) + " seconds.");
+
+    humanTurn = true;
+
+    qDebug() << "Returned!!!";
 
 }
 
