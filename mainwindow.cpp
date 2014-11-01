@@ -261,7 +261,7 @@ void MainWindow::CheckWinner(int grid){
 
         ui->playAgain->setVisible(true);
     }
-    else if(game->winner(grid) == 0){
+    else if(game->winner(grid) == -5){
 
         announce = "TIE! on board" + QString::number(grid);
 

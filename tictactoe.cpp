@@ -107,7 +107,7 @@ int TicTacToe::winner(int currentGrid){
 
     //Check for tie. If no more empty spots, no more moves
     if(count(boards[currentGrid].begin(), boards[currentGrid].end(), EMPTY) == 0)
-        return 0;
+        return TIE;
 }
 
 

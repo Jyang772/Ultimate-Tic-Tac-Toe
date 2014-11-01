@@ -10,7 +10,7 @@ const int NUM_SQUARES = 9;
 const char X = 'X';
 const char O = 'O';
 //const char EMPTY = ' ';
-const char TIE = 'T';
+const int TIE = -5;
 const char NO_ONE = 'N';
 const int EMPTY = 0;
 
