@@ -305,6 +305,9 @@ int TicTacToe::pickMove(int currentGrid,int player, int& best){
                 score += -1 * (VERY_LARGE+DEPTH_LIMIT);
                 qDebug() << "FOR SLOT: " << slot;
             }
+            else if(winner(gridStates) == 1){
+                score += VERY_LARGE*10;
+            }
             gridStates[slot] = EMPTY;
             }
 
