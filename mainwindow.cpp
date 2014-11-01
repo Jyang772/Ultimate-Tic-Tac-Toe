@@ -273,8 +273,12 @@ void MainWindow::CheckWinner(int grid){
     }
 
     //Now check ultimate win
-    if(game->ultWin() == -1)
+    if(game->ultWin() == -1){
         qDebug() << "HUMAN WIN";
+        frames[game->ultimateWinGrids[0]]->setStyleSheet("background-color: red");
+        frames[game->ultimateWinGrids[1]]->setStyleSheet("background-color: red");
+        frames[game->ultimateWinGrids[2]]->setStyleSheet("background-color: red");
+    }
     else if(game->ultWin() == 1){
 
         qDebug() << "COMPUTER WIN";
