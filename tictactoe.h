@@ -58,6 +58,8 @@ public:
     int human = -1;
     int turn;
     int winningRows[3];
+    int ultimateWinGrids[3] = {};
+
 
 
     void setDepth(int strength = 2);

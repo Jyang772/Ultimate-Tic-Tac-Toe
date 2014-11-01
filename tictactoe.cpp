@@ -29,6 +29,10 @@ void TicTacToe::humanMove(int move,int currentGrid){
 
 bool TicTacToe::isLegal(int move,int currentGrid) const{
 
+    qDebug() << "is Legal?: " << currentGrid;
+    qDebug() << "isLegal move?: " << move;
+    qDebug() << "boards[currentGrid][move]: " << (boards[currentGrid][move] == EMPTY);
+
     return (boards[currentGrid][move] == EMPTY);
 }
 
@@ -51,6 +55,14 @@ int TicTacToe::winner(const std::vector<int> &board){
                 (board[WINNING_ROWS[row][0]] == (board[WINNING_ROWS[row][1]])) &&
                 (board[WINNING_ROWS[row][1]] == board[WINNING_ROWS[row][2]]) )
         {
+
+            qDebug() << "Ultimate win rows: " << WINNING_ROWS[row][0];
+            qDebug() << "Ultimate win rows: " << WINNING_ROWS[row][1];
+            qDebug() << "Ultimate win rows: " << WINNING_ROWS[row][2];
+            ultimateWinGrids[0] = WINNING_ROWS[row][0];
+            ultimateWinGrids[1] = WINNING_ROWS[row][1];
+            ultimateWinGrids[2] = WINNING_ROWS[row][2];
+
             return board[WINNING_ROWS[row][0]]; //Return the character that has won
         }
     }
@@ -61,6 +73,8 @@ int TicTacToe::winner(const std::vector<int> &board){
 
 
 int TicTacToe::winner(int currentGrid){
+
+    qDebug() << "Checking winner at grid: " << currentGrid;
 
 
     const int WINNING_ROWS[8][3] = {
@@ -80,6 +94,10 @@ int TicTacToe::winner(int currentGrid){
                 (boards[currentGrid][WINNING_ROWS[row][0]] == boards[currentGrid][WINNING_ROWS[row][1]]) &&
                 (boards[currentGrid][WINNING_ROWS[row][1]] == boards[currentGrid][WINNING_ROWS[row][2]]) )
         {
+            qDebug() << "Regular win: " <<  WINNING_ROWS[row][0];
+            qDebug() << "Regular win: " <<  WINNING_ROWS[row][1];
+            qDebug() << "Regular win: " <<  WINNING_ROWS[row][2];
+
             winningRows[0] = WINNING_ROWS[row][0];
             winningRows[1] = WINNING_ROWS[row][1];
             winningRows[2] = WINNING_ROWS[row][2];
@@ -130,9 +148,10 @@ int TicTacToe::CalculateGrid(int currentGrid,int player){
             if((i != currentGrid)){
                 move = pickMove(i,player,best);
                 qDebug() << "best: " << best;
-                if(best > bestscore && boards[move][i] == EMPTY){
+                //Check if move place is empty, and that the move grid has not been won.
+                if((best > bestscore) && (boards[i][move] == EMPTY) && (gridStates[i] == EMPTY)){
                     qDebug() << "move: " << move << " i: " << i;
-                    boards[move][i] = player;
+                    boards[i][move] = player;
                     emit computerMove(move,i);
                     return 20;
                 }
@@ -159,7 +178,10 @@ void TicTacToe::setGridState(int grid, int winner){
 
 int TicTacToe::ultWin(){
 
-    return winner(gridStates);
+    int lol = winner(gridStates);
+    qDebug() << "ULIMATE WIN: " << lol;
+    //return winner(gridStates);
+                return lol;
 }
 
 void TicTacToe::utility(int currentGrid,int move,int depth){
@@ -244,6 +266,8 @@ void TicTacToe::utility(int currentGrid,int move,int depth){
 
 int TicTacToe::pickMove(int currentGrid,int player, int& best){
 
+    qDebug() << "Picking move for grid: " << currentGrid;
+
     int score = 0;
     int bestScore = -VERY_LARGE - DEPTH_LIMIT;
     std::vector<int> my_moves;
@@ -267,13 +291,13 @@ int TicTacToe::pickMove(int currentGrid,int player, int& best){
 
             boards[currentGrid][slot] = 0;
 
-            if(score > bestScore){
+            if((score > bestScore) && (gridStates[currentGrid] == EMPTY) && (boards[currentGrid][slot] == EMPTY)){
                 bestScore = score;
                 my_moves.clear();
                 my_moves.push_back(slot);
 
             }
-            else if(score == bestScore){
+            else if((score == bestScore) && (gridStates[currentGrid] == EMPTY) && (boards[currentGrid][slot] == EMPTY)){
                 my_moves.push_back(slot);
             }
 
@@ -293,14 +317,14 @@ int TicTacToe::pickMove(int currentGrid,int player, int& best){
     else{
         rv = my_moves.back();
 
-        if(my_moves.size() > 1){
-            int r = std::rand() % my_moves.size();
-            rv = my_moves[r];
+//        if(my_moves.size() > 1){
+//            int r = std::rand() % my_moves.size();
+//            rv = my_moves[r];
 
-            for(auto i : my_moves)
-                qDebug() << "MMOVES!!: " << i;
-            qDebug() << "Move chosen: " <<  rv;
-        }
+//            for(auto i : my_moves)
+//                qDebug() << "MMOVES!!: " << i;
+//            qDebug() << "Move chosen: " <<  rv;
+//        }
     }
 
     if(bestScore > THRESHOLD)

@@ -166,8 +166,8 @@ int MainWindow::itemClicked(){
         qDebug() << "RETURN: ";
 
     }
-    else if(!game->isLegal(clickedItem->objectName().toInt(),currentGrid))
-        invalidMove();
+    //else if(!game->isLegal(clickedItem->objectName().toInt(),currentGrid))
+        //invalidMove();
 }
 
 void MainWindow::begin(int strength){
@@ -208,7 +208,6 @@ void MainWindow::computerMove(int move,int grid){
     if(grid != -1)
         nextGrid = grid;
 
-    qDebug() << "NEXTGRID: " << grid;
 
 
     qDebug() << "PLAYER: " << player;
@@ -237,7 +236,6 @@ void MainWindow::computerMove(int move,int grid){
     //emit computer(nextGrid);
 }
 
-
 void MainWindow::CheckWinner(int grid){
 
     QString announce;
@@ -254,18 +252,18 @@ void MainWindow::CheckWinner(int grid){
         ui->playAgain->setVisible(true);
     }
     else if(game->winner(grid) == 1){
-        game->setGridState(nextGrid,1);
+        game->setGridState(grid,1);
 
-        qDebug() << "COMPUTER WON AT " << nextGrid;
+        qDebug() << "COMPUTER WON AT " << grid;
 
-        wonGrids[nextGrid] = 1;
-        colorBoardWin(nextGrid,1);
+        wonGrids[grid] = 1;
+        colorBoardWin(grid,1);
 
         ui->playAgain->setVisible(true);
     }
     else if(game->winner(grid) == 0){
 
-        announce = "TIE! on board" + QString::number(currentGrid);
+        announce = "TIE! on board" + QString::number(grid);
 
         ui->announce->setText(announce);
 
@@ -276,8 +274,15 @@ void MainWindow::CheckWinner(int grid){
     //Now check ultimate win
     if(game->ultWin() == -1)
         qDebug() << "HUMAN WIN";
-    else if(game->ultWin() == -1)
+    else if(game->ultWin() == 1){
+
         qDebug() << "COMPUTER WIN";
+
+        frames[game->ultimateWinGrids[0]]->setStyleSheet("background-color: red");
+        frames[game->ultimateWinGrids[1]]->setStyleSheet("background-color: red");
+        frames[game->ultimateWinGrids[2]]->setStyleSheet("background-color: red");
+
+    }
 
 }
 
@@ -289,6 +294,9 @@ void MainWindow::invalidMove(){
 
 void MainWindow::on_playAgain_clicked()
 {
+
+    //Clear all background colors,
+
     for(int i=0; i<9; i++){
         for(int j=0;j<9;j++){
             itemButtons[i][j]->setText("");
