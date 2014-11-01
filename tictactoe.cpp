@@ -249,8 +249,14 @@ void TicTacToe::utility(int currentGrid,int move,int depth){
         if(move == 0 || move == 2 || move == 6 || move == 8){
             bonus += 2;//*boards[currentGrid][move];
         }
-        if(move == 4){
-            bonus += 7;//*boards[currentGrid][move];
+
+//        if(move == 4){
+//            bonus += 7;//*boards[currentGrid][move];
+//        }
+
+        //Strange behaviour documented here.
+        if(currentGrid == 0){
+            bonus +=7;
         }
 
         score += boards[currentGrid][move]*bonus;
@@ -315,16 +321,17 @@ int TicTacToe::pickMove(int currentGrid,int player, int& best){
 
     }
     else{
-        rv = my_moves.back();
+        //rv = my_moves.back();
+        rv = my_moves[0];
 
-//        if(my_moves.size() > 1){
-//            int r = std::rand() % my_moves.size();
-//            rv = my_moves[r];
+        if(my_moves.size() > 1){
+            int r = std::rand() % my_moves.size();
+            rv = my_moves[r];
 
-//            for(auto i : my_moves)
-//                qDebug() << "MMOVES!!: " << i;
-//            qDebug() << "Move chosen: " <<  rv;
-//        }
+            for(auto i : my_moves)
+                qDebug() << "MMOVES!!: " << i;
+            qDebug() << "Move chosen: " <<  rv;
+        }
     }
 
     if(bestScore > THRESHOLD)
