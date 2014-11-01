@@ -181,7 +181,7 @@ void MainWindow::begin(int strength){
     if(options->getChar() == 'O'){
         text.append(". Computer moves first.");
         player = 1;
-        //int r = std::rand() % 9;
+        int r = std::rand() % 9;
         game->CalculateGrid(4,1); //Computer moves.
     }
     else{
