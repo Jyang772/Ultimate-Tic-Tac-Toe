@@ -140,32 +140,24 @@ int TicTacToe::CalculateGrid(int currentGrid,int player){
     // If a player forces the computer to a score that has already been won...welp.
     // Computer gets to pick whichever grid he wants. 2 guud 4 uuu
     int test;
-    int nextGrid, nextSlot;
-    int move,best,bestscore = -20000;
     if(gridStates[currentGrid] != EMPTY){
         qDebug() << "NOT EMPTY" << endl << endl;
+        int move,best,bestscore = -20000;
         for(int i=0; i<9; i++){
             qDebug() << "looping";
             if((i != currentGrid)){
                 move = pickMove(i,player,best);
                 qDebug() << "best: " << best;
                 //Check if move place is empty, and that the move grid has not been won.
-                if((best > bestscore) && (boards[move][i] == EMPTY) && (gridStates[i] == EMPTY)){
+                if((best > bestscore) && (boards[i][move] == EMPTY) && (gridStates[i] == EMPTY)){
                     qDebug() << "move: " << move << " i: " << i;
-                    nextGrid = i;
-                    nextSlot = move;
-                    //boards[i][move] = player;
-                    //emit computerMove(move,i);
-                    //return 20;
+                    boards[i][move] = player;
+                    emit computerMove(move,i);
+                    return 20;
                 }
             }
         }
-        boards[nextGrid][nextSlot] = player;
-        emit computerMove(nextGrid,nextSlot);
-        return 20;
     }
-
-
 
 
 
@@ -199,7 +191,6 @@ void TicTacToe::utility(int currentGrid,int move,int depth){
 
     int triad_sum = 0;
     int score = 0;
-    int ultimateWin = 0;
 
 
     int numElements = BY_SLOT[move][0];
@@ -208,9 +199,8 @@ void TicTacToe::utility(int currentGrid,int move,int depth){
         triad_sum = 0;
         for(int j=0; j<3; j++){
             triad_sum += boards[currentGrid][WINNING_TRIADS[BY_SLOT[move][i]][j]];
-          }
+        }
 
-        //Experimental
 
 
         switch(triad_sum){
@@ -260,16 +250,17 @@ void TicTacToe::utility(int currentGrid,int move,int depth){
             bonus += 2;//*boards[currentGrid][move];
         }
 
-        if(move == 4){
-            bonus += 7;//*boards[currentGrid][move];
-        }
-
-        //Strange behaviour documented here.
-//        if(currentGrid == 0){
-//            bonus +=7;
+//        if(move == 4){
+//            bonus += 7;//*boards[currentGrid][move];
 //        }
 
+        //Strange behaviour documented here.
+        if(currentGrid == 0){
+            bonus +=7;
+        }
+
         score += boards[currentGrid][move]*bonus;
+
 
     }
 
@@ -284,7 +275,7 @@ int TicTacToe::pickMove(int currentGrid,int player, int& best){
     qDebug() << "Picking move for grid: " << currentGrid;
 
     int score = 0;
-    int bestScore = -VERY_LARGE - DEPTH_LIMIT;
+    int bestScore = -VERY_LARGE - DEPTH_LIMIT - 1000;
     std::vector<int> my_moves;
 
     int opponent;
@@ -307,13 +298,16 @@ int TicTacToe::pickMove(int currentGrid,int player, int& best){
             boards[currentGrid][slot] = 0;
 
 
-            //Experimental. See how move compares in big picture
-
-            int numSlots = BY_SLOT[slot][0];
-            for(int i=1; i<numSlots;i++){
-                for(int j=0; j<3;j++)
-                    score += gridStates[WINNING_TRIADS[BY_SLOT[slot][i]][j]] * VERY_LARGE;
+            //Experimental. This is not newest commit.
+            if(gridStates[slot] == EMPTY){
+            gridStates[slot] = -1;
+            if(winner(gridStates) == -1){
+                score += -1 * (VERY_LARGE+DEPTH_LIMIT);
+                qDebug() << "FOR SLOT: " << slot;
             }
+            gridStates[slot] = EMPTY;
+            }
+
 
             if((score > bestScore) && (gridStates[currentGrid] == EMPTY) && (boards[currentGrid][slot] == EMPTY)){
                 bestScore = score;
@@ -330,12 +324,11 @@ int TicTacToe::pickMove(int currentGrid,int player, int& best){
 
         qDebug() << "Move: " << slot << " Score: " << score;
 
-
-
     }
 
     int rv = 0;
     if(my_moves.size() < 1){
+        qDebug() << "ERROR. NO MOVES FOUND.";
 
     }
     else{
