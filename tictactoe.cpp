@@ -140,24 +140,37 @@ int TicTacToe::CalculateGrid(int currentGrid,int player){
     // If a player forces the computer to a score that has already been won...welp.
     // Computer gets to pick whichever grid he wants. 2 guud 4 uuu
     int test;
+    bool found = false;
+    int nextGrid,nextMove;
     if(gridStates[currentGrid] != EMPTY){
         qDebug() << "NOT EMPTY" << endl << endl;
         int move,best,bestscore = -20000;
         for(int i=0; i<9; i++){
             qDebug() << "looping";
-            if((i != currentGrid && gridStates[i] == EMPTY)){
+            if((i != currentGrid)){
                 move = pickMove(i,player,best);
                 qDebug() << "best: " << best;
                 //Check if move place is empty, and that the move grid has not been won.
                 if((best > bestscore) && (boards[i][move] == EMPTY) && (gridStates[i] == EMPTY)){
                     qDebug() << "move: " << move << " i: " << i;
-                    boards[i][move] = player;
-                    emit computerMove(move,i);
-                    return 20;
+                    nextGrid = i;
+                    nextMove = move;
+                    found = true;
+                    bestscore = best;
+                    //                    boards[i][move] = player;
+                    //                    emit computerMove(move,i);
+                    //                    return 20;
                 }
             }
         }
     }
+
+    if(found){
+        boards[nextGrid][nextMove] = player;
+        emit computerMove(nextMove,nextGrid);
+        return 20;}
+
+
 
 
 
@@ -186,7 +199,6 @@ int TicTacToe::ultWin(){
 
 void TicTacToe::utility(int currentGrid,int move,int depth){
 
-
     bool win = false;
 
     int triad_sum = 0;
@@ -208,7 +220,6 @@ void TicTacToe::utility(int currentGrid,int move,int depth){
         {
             win = 1;
             score = boards[currentGrid][WINNING_TRIADS[BY_SLOT[move][i]][0]] * VERY_LARGE - depth;
-            score += gridStates[WINNING_TRIADS[BY_SLOT[move][i]][0]] * VERY_LARGE - depth;
             break;
         }
         case 2:{
@@ -219,7 +230,6 @@ void TicTacToe::utility(int currentGrid,int move,int depth){
         }
         case -2:
             score -=3000;
-            score += gridStates[WINNING_TRIADS[BY_SLOT[move][i]][0]];
             break;
         case 1:
         case -1:{
@@ -243,6 +253,42 @@ void TicTacToe::utility(int currentGrid,int move,int depth){
 
     }
 
+    int ultimateWin = 0;
+    bool ultra = false;
+
+    for(int i=1; i<=numElements;i++){
+        for(int j=0; j<3; j++){
+            ultimateWin += gridStates[WINNING_TRIADS[BY_SLOT[move][i]][j]];
+        }
+
+        switch(ultimateWin){
+
+        case 3:
+        case -3:
+        {
+            ultra = true;
+            score += gridStates[WINNING_TRIADS[BY_SLOT[move][i]][0]] * VERY_LARGE - depth;
+        }
+        case 2:
+            score += 3000;
+        case -2:
+            score += -3000;
+        case 1:
+        case -1:
+            if((gridStates[WINNING_TRIADS[BY_SLOT[move][i]][0]] & gridStates[WINNING_TRIADS[BY_SLOT[move][i]][1]] & gridStates[WINNING_TRIADS[BY_SLOT[move][i]][2]]) != 0){
+                score -= ultimateWin * 1000;
+            }
+        case 0:
+            break;
+        default:
+            break;
+        }
+
+        if(ultra)
+            break;
+    }
+
+
 
     if(!win){
 
@@ -252,14 +298,24 @@ void TicTacToe::utility(int currentGrid,int move,int depth){
             bonus += 2;//*boards[currentGrid][move];
         }
 
-        //        if(move == 4){
-        //            bonus += 7;//*boards[currentGrid][move];
-        //        }
+        if(move == 4){
+            bonus += 7;//*boards[currentGrid][move];
+        }
+
+        if(gridStates[currentGrid] == EMPTY){
+            if(currentGrid == 0 || currentGrid == 2 || currentGrid == 6 || currentGrid == 8){
+                bonus += 2;//*boards[currentGrid][move];
+            }
+
+            if(currentGrid == 4){
+                bonus += 7;//*boards[currentGrid][move];
+            }
+        }
 
         //Strange behaviour documented here.
-        if(currentGrid == 0){
-            bonus +=7;
-        }
+        //        if(currentGrid == 0){
+        //            bonus +=7;
+        //        }
 
         score += boards[currentGrid][move]*bonus;
 
@@ -289,7 +345,7 @@ int TicTacToe::pickMove(int currentGrid,int player, int& best){
 
     for(int slot=0; slot<9; slot++){
 
-        if(boards[currentGrid][slot] == EMPTY){
+        if(boards[currentGrid][slot] == EMPTY && gridStates[currentGrid] == EMPTY){
             //boards[currentGrid][slot] = 1;
             boards[currentGrid][slot] = player;
 
@@ -297,28 +353,15 @@ int TicTacToe::pickMove(int currentGrid,int player, int& best){
             utility(currentGrid,slot,0);
             score = alphaBeta(boards[currentGrid],slot,opponent,player,(-(VERY_LARGE+DEPTH_LIMIT)-1),(VERY_LARGE+DEPTH_LIMIT+1),1,rets[0],rets[1]);
 
-            //Experimental
-            //If move results in win, but allows human player to choose any move. Make sure there are no winning positions for human player to play.
-            for(int i=0; i<9; i++){
-                if(gridStates[i] == EMPTY && (winner(boards[currentGrid]) != EMPTY)){
-                    gridStates[i] = -1;
-                    if(winner(gridStates) == -1)
-                        score -= VERY_LARGE;
-                }
-            }
-
             boards[currentGrid][slot] = 0;
 
-            //qDebug() << "bestScore: " << bestScore;
-
-            if((score > bestScore)){
-                qDebug() << "Accepted move: " << slot;
+            if((score > bestScore) && (gridStates[currentGrid] == EMPTY) && (boards[currentGrid][slot] == EMPTY)){
                 bestScore = score;
                 my_moves.clear();
                 my_moves.push_back(slot);
 
             }
-            else if((score == bestScore)){
+            else if((score == bestScore) && (gridStates[currentGrid] == EMPTY) && (boards[currentGrid][slot] == EMPTY)){
                 my_moves.push_back(slot);
             }
 

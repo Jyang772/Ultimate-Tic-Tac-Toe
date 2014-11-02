@@ -182,7 +182,7 @@ void MainWindow::begin(int strength){
         text.append(". Computer moves first.");
         player = 1;
         int r = std::rand() % 9;
-        game->CalculateGrid(4,1); //Computer moves.
+        game->CalculateGrid(r,1); //Computer moves.
     }
     else{
         text.append(". Select a square.");
