@@ -3,6 +3,9 @@
 
 #include "dialog.h"
 #include "tictactoe.h"
+#include "montebot.h"
+#include "game.h"
+
 #include <string.h>
 #include <iostream>
 #include <QMainWindow>
@@ -36,6 +39,10 @@ public:
 
     void computer(int grid, int player);
     ~MainWindow();
+
+
+    //MonteCarlo
+    void computerMoves();
 
 signals:
     void turnComplete(int);
@@ -88,6 +95,9 @@ private:
 
 
     QThread *pthread = new QThread();
+
+    MonteBot montebot;
+    Game newgame;
 
 };
 

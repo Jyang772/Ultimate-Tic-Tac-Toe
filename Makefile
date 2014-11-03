@@ -49,7 +49,13 @@ SOURCES       = dialog.cpp \
 		main.cpp \
 		mainwindow.cpp \
 		tictactoe.cpp \
-		strategy.cpp moc_dialog.cpp \
+		strategy.cpp \
+		board.cpp \
+		cell.cpp \
+		montebot.cpp \
+		game.cpp \
+		tictactoeboard.cpp \
+		randombot.cpp moc_dialog.cpp \
 		moc_mainwindow.cpp \
 		moc_tictactoe.cpp
 OBJECTS       = dialog.o \
@@ -57,6 +63,12 @@ OBJECTS       = dialog.o \
 		mainwindow.o \
 		tictactoe.o \
 		strategy.o \
+		board.o \
+		cell.o \
+		montebot.o \
+		game.o \
+		tictactoeboard.o \
+		randombot.o \
 		moc_dialog.o \
 		moc_mainwindow.o \
 		moc_tictactoe.o
@@ -310,7 +322,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/TTT1.0.0 || mkdir -p .tmp/TTT1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/TTT1.0.0/ && $(COPY_FILE) --parents dialog.h mainwindow.h tictactoe.h .tmp/TTT1.0.0/ && $(COPY_FILE) --parents dialog.cpp main.cpp mainwindow.cpp tictactoe.cpp strategy.cpp .tmp/TTT1.0.0/ && $(COPY_FILE) --parents dialog.ui mainwindow.ui .tmp/TTT1.0.0/ && (cd `dirname .tmp/TTT1.0.0` && $(TAR) TTT1.0.0.tar TTT1.0.0 && $(COMPRESS) TTT1.0.0.tar) && $(MOVE) `dirname .tmp/TTT1.0.0`/TTT1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/TTT1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/TTT1.0.0/ && $(COPY_FILE) --parents dialog.h mainwindow.h tictactoe.h board.h cell.h montebot.h game.h tictactoeboard.h move.h randombot.h .tmp/TTT1.0.0/ && $(COPY_FILE) --parents dialog.cpp main.cpp mainwindow.cpp tictactoe.cpp strategy.cpp board.cpp cell.cpp montebot.cpp game.cpp tictactoeboard.cpp randombot.cpp .tmp/TTT1.0.0/ && $(COPY_FILE) --parents dialog.ui mainwindow.ui .tmp/TTT1.0.0/ && (cd `dirname .tmp/TTT1.0.0` && $(TAR) TTT1.0.0.tar TTT1.0.0 && $(COMPRESS) TTT1.0.0.tar) && $(MOVE) `dirname .tmp/TTT1.0.0`/TTT1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/TTT1.0.0
 
 
 clean:compiler_clean 
@@ -575,6 +587,8 @@ moc_mainwindow.cpp: dialog.h \
 		/usr/include/qt5/QtWidgets/qlabel.h \
 		/usr/include/qt5/QtWidgets/qframe.h \
 		tictactoe.h \
+		cell.h \
+		board.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtWidgets/QMainWindow \
 		/usr/include/qt5/QtWidgets/qmainwindow.h \
@@ -586,10 +600,138 @@ moc_mainwindow.cpp: dialog.h \
 		/usr/include/qt5/QtCore/QDebug \
 		/usr/include/qt5/QtCore/QThread \
 		/usr/include/qt5/QtCore/qthread.h \
+		/usr/include/qt5/QtConcurrent/QtConcurrent \
+		/usr/include/qt5/QtConcurrent/QtConcurrentDepends \
+		/usr/include/qt5/QtCore/QtCore \
+		/usr/include/qt5/QtCore/QtCoreDepends \
+		/usr/include/qt5/QtCore/qabstractanimation.h \
+		/usr/include/qt5/QtCore/qanimationgroup.h \
+		/usr/include/qt5/QtCore/qparallelanimationgroup.h \
+		/usr/include/qt5/QtCore/qpauseanimation.h \
+		/usr/include/qt5/QtCore/qpropertyanimation.h \
+		/usr/include/qt5/QtCore/qvariantanimation.h \
+		/usr/include/qt5/QtCore/qeasingcurve.h \
+		/usr/include/qt5/QtCore/qsequentialanimationgroup.h \
+		/usr/include/qt5/QtCore/qtextcodec.h \
+		/usr/include/qt5/QtCore/qendian.h \
+		/usr/include/qt5/QtCore/qlibraryinfo.h \
+		/usr/include/qt5/QtCore/qdatetime.h \
+		/usr/include/qt5/QtCore/qnumeric.h \
+		/usr/include/qt5/QtCore/qbuffer.h \
+		/usr/include/qt5/QtCore/qdir.h \
+		/usr/include/qt5/QtCore/qfileinfo.h \
+		/usr/include/qt5/QtCore/qdiriterator.h \
+		/usr/include/qt5/QtCore/qfileselector.h \
+		/usr/include/qt5/QtCore/QStringList \
+		/usr/include/qt5/QtCore/qfilesystemwatcher.h \
+		/usr/include/qt5/QtCore/qlockfile.h \
+		/usr/include/qt5/QtCore/qloggingcategory.h \
+		/usr/include/qt5/QtCore/qprocess.h \
+		/usr/include/qt5/QtCore/qresource.h \
+		/usr/include/qt5/QtCore/qsavefile.h \
+		/usr/include/qt5/QtCore/qsettings.h \
+		/usr/include/qt5/QtCore/qstandardpaths.h \
+		/usr/include/qt5/QtCore/qtemporarydir.h \
+		/usr/include/qt5/QtCore/QScopedPointer \
+		/usr/include/qt5/QtCore/qtemporaryfile.h \
+		/usr/include/qt5/QtCore/qabstractitemmodel.h \
+		/usr/include/qt5/QtCore/qabstractproxymodel.h \
+		/usr/include/qt5/QtCore/qidentityproxymodel.h \
+		/usr/include/qt5/QtCore/qitemselectionmodel.h \
+		/usr/include/qt5/QtCore/qsortfilterproxymodel.h \
+		/usr/include/qt5/QtCore/qstringlistmodel.h \
+		/usr/include/qt5/QtCore/qjsonarray.h \
+		/usr/include/qt5/QtCore/qjsonvalue.h \
+		/usr/include/qt5/QtCore/qjsondocument.h \
+		/usr/include/qt5/QtCore/qjsonobject.h \
+		/usr/include/qt5/QtCore/qabstracteventdispatcher.h \
+		/usr/include/qt5/QtCore/qeventloop.h \
+		/usr/include/qt5/QtCore/qabstractnativeeventfilter.h \
+		/usr/include/qt5/QtCore/qbasictimer.h \
+		/usr/include/qt5/QtCore/qcoreapplication.h \
+		/usr/include/qt5/QtCore/qmath.h \
+		/usr/include/qt5/QtCore/qmetaobject.h \
+		/usr/include/qt5/QtCore/qmimedata.h \
+		/usr/include/qt5/QtCore/qobjectcleanuphandler.h \
+		/usr/include/qt5/QtCore/qpointer.h \
+		/usr/include/qt5/QtCore/qsharedmemory.h \
+		/usr/include/qt5/QtCore/qsignalmapper.h \
+		/usr/include/qt5/QtCore/qsocketnotifier.h \
+		/usr/include/qt5/QtCore/qsystemsemaphore.h \
+		/usr/include/qt5/QtCore/qtimer.h \
+		/usr/include/qt5/QtCore/qtranslator.h \
+		/usr/include/qt5/QtCore/qwineventnotifier.h \
+		/usr/include/qt5/QtCore/qmimedatabase.h \
+		/usr/include/qt5/QtCore/qmimetype.h \
+		/usr/include/qt5/QtCore/qfactoryinterface.h \
+		/usr/include/qt5/QtCore/qlibrary.h \
+		/usr/include/qt5/QtCore/qplugin.h \
+		/usr/include/qt5/QtCore/qpluginloader.h \
+		/usr/include/qt5/QtCore/quuid.h \
+		/usr/include/qt5/QtCore/qabstractstate.h \
+		/usr/include/qt5/QtCore/qabstracttransition.h \
+		/usr/include/qt5/QtCore/qeventtransition.h \
+		/usr/include/qt5/QtCore/qfinalstate.h \
+		/usr/include/qt5/QtCore/qhistorystate.h \
+		/usr/include/qt5/QtCore/qsignaltransition.h \
+		/usr/include/qt5/QtCore/qstate.h \
+		/usr/include/qt5/QtCore/qstatemachine.h \
+		/usr/include/qt5/QtCore/qexception.h \
+		/usr/include/qt5/QtCore/qfuture.h \
+		/usr/include/qt5/QtCore/qfutureinterface.h \
+		/usr/include/qt5/QtCore/qrunnable.h \
+		/usr/include/qt5/QtCore/qresultstore.h \
+		/usr/include/qt5/QtCore/qfuturesynchronizer.h \
+		/usr/include/qt5/QtCore/qfuturewatcher.h \
+		/usr/include/qt5/QtCore/qreadwritelock.h \
+		/usr/include/qt5/QtCore/qsemaphore.h \
+		/usr/include/qt5/QtCore/qthreadpool.h \
+		/usr/include/qt5/QtCore/qthreadstorage.h \
+		/usr/include/qt5/QtCore/qwaitcondition.h \
+		/usr/include/qt5/QtCore/qarraydataops.h \
+		/usr/include/qt5/QtCore/qarraydatapointer.h \
+		/usr/include/qt5/QtCore/qbitarray.h \
+		/usr/include/qt5/QtCore/qbytearraymatcher.h \
+		/usr/include/qt5/QtCore/qcache.h \
+		/usr/include/qt5/QtCore/qcollator.h \
+		/usr/include/qt5/QtCore/qcommandlineoption.h \
+		/usr/include/qt5/QtCore/qcommandlineparser.h \
+		/usr/include/qt5/QtCore/qcryptographichash.h \
+		/usr/include/qt5/QtCore/qelapsedtimer.h \
+		/usr/include/qt5/QtCore/qlinkedlist.h \
+		/usr/include/qt5/QtCore/qmessageauthenticationcode.h \
+		/usr/include/qt5/QtCore/qqueue.h \
+		/usr/include/qt5/QtCore/qregularexpression.h \
+		/usr/include/qt5/QtCore/qscopedvaluerollback.h \
+		/usr/include/qt5/QtCore/qstack.h \
+		/usr/include/qt5/QtCore/qtextboundaryfinder.h \
+		/usr/include/qt5/QtCore/qtimeline.h \
+		/usr/include/qt5/QtCore/qtimezone.h \
+		/usr/include/qt5/QtCore/qxmlstream.h \
+		/usr/include/qt5/QtCore/qtcoreversion.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentcompilertest.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrent_global.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentexception.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentfilter.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentfilterkernel.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentiteratekernel.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentmedian.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentthreadengine.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentmapkernel.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentreducekernel.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentfunctionwrappers.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentmap.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentrun.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentrunbase.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentstoredfunctioncall.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentversion.h \
+		/usr/include/qt5/QtCore/QFuture \
 		mainwindow.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindow.h -o moc_mainwindow.cpp
 
-moc_tictactoe.cpp: /usr/include/qt5/QtCore/QObject \
+moc_tictactoe.cpp: cell.h \
+		board.h \
+		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
 		/usr/include/qt5/QtCore/qnamespace.h \
@@ -955,6 +1097,8 @@ main.o: main.cpp mainwindow.h \
 		/usr/include/qt5/QtWidgets/qlabel.h \
 		/usr/include/qt5/QtWidgets/qframe.h \
 		tictactoe.h \
+		cell.h \
+		board.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtWidgets/QMainWindow \
 		/usr/include/qt5/QtWidgets/qmainwindow.h \
@@ -966,10 +1110,134 @@ main.o: main.cpp mainwindow.h \
 		/usr/include/qt5/QtCore/QDebug \
 		/usr/include/qt5/QtCore/QThread \
 		/usr/include/qt5/QtCore/qthread.h \
+		/usr/include/qt5/QtConcurrent/QtConcurrent \
+		/usr/include/qt5/QtConcurrent/QtConcurrentDepends \
+		/usr/include/qt5/QtCore/QtCore \
+		/usr/include/qt5/QtCore/QtCoreDepends \
+		/usr/include/qt5/QtCore/qabstractanimation.h \
+		/usr/include/qt5/QtCore/qanimationgroup.h \
+		/usr/include/qt5/QtCore/qparallelanimationgroup.h \
+		/usr/include/qt5/QtCore/qpauseanimation.h \
+		/usr/include/qt5/QtCore/qpropertyanimation.h \
+		/usr/include/qt5/QtCore/qvariantanimation.h \
+		/usr/include/qt5/QtCore/qeasingcurve.h \
+		/usr/include/qt5/QtCore/qsequentialanimationgroup.h \
+		/usr/include/qt5/QtCore/qtextcodec.h \
+		/usr/include/qt5/QtCore/qendian.h \
+		/usr/include/qt5/QtCore/qlibraryinfo.h \
+		/usr/include/qt5/QtCore/qdatetime.h \
+		/usr/include/qt5/QtCore/qnumeric.h \
+		/usr/include/qt5/QtCore/qbuffer.h \
+		/usr/include/qt5/QtCore/qdir.h \
+		/usr/include/qt5/QtCore/qfileinfo.h \
+		/usr/include/qt5/QtCore/qdiriterator.h \
+		/usr/include/qt5/QtCore/qfileselector.h \
+		/usr/include/qt5/QtCore/QStringList \
+		/usr/include/qt5/QtCore/qfilesystemwatcher.h \
+		/usr/include/qt5/QtCore/qlockfile.h \
+		/usr/include/qt5/QtCore/qloggingcategory.h \
+		/usr/include/qt5/QtCore/qprocess.h \
+		/usr/include/qt5/QtCore/qresource.h \
+		/usr/include/qt5/QtCore/qsavefile.h \
+		/usr/include/qt5/QtCore/qsettings.h \
+		/usr/include/qt5/QtCore/qstandardpaths.h \
+		/usr/include/qt5/QtCore/qtemporarydir.h \
+		/usr/include/qt5/QtCore/QScopedPointer \
+		/usr/include/qt5/QtCore/qtemporaryfile.h \
+		/usr/include/qt5/QtCore/qabstractitemmodel.h \
+		/usr/include/qt5/QtCore/qabstractproxymodel.h \
+		/usr/include/qt5/QtCore/qidentityproxymodel.h \
+		/usr/include/qt5/QtCore/qitemselectionmodel.h \
+		/usr/include/qt5/QtCore/qsortfilterproxymodel.h \
+		/usr/include/qt5/QtCore/qstringlistmodel.h \
+		/usr/include/qt5/QtCore/qjsonarray.h \
+		/usr/include/qt5/QtCore/qjsonvalue.h \
+		/usr/include/qt5/QtCore/qjsondocument.h \
+		/usr/include/qt5/QtCore/qjsonobject.h \
+		/usr/include/qt5/QtCore/qabstracteventdispatcher.h \
+		/usr/include/qt5/QtCore/qeventloop.h \
+		/usr/include/qt5/QtCore/qabstractnativeeventfilter.h \
+		/usr/include/qt5/QtCore/qbasictimer.h \
+		/usr/include/qt5/QtCore/qcoreapplication.h \
+		/usr/include/qt5/QtCore/qmath.h \
+		/usr/include/qt5/QtCore/qmetaobject.h \
+		/usr/include/qt5/QtCore/qmimedata.h \
+		/usr/include/qt5/QtCore/qobjectcleanuphandler.h \
+		/usr/include/qt5/QtCore/qpointer.h \
+		/usr/include/qt5/QtCore/qsharedmemory.h \
+		/usr/include/qt5/QtCore/qsignalmapper.h \
+		/usr/include/qt5/QtCore/qsocketnotifier.h \
+		/usr/include/qt5/QtCore/qsystemsemaphore.h \
+		/usr/include/qt5/QtCore/qtimer.h \
+		/usr/include/qt5/QtCore/qtranslator.h \
+		/usr/include/qt5/QtCore/qwineventnotifier.h \
+		/usr/include/qt5/QtCore/qmimedatabase.h \
+		/usr/include/qt5/QtCore/qmimetype.h \
+		/usr/include/qt5/QtCore/qfactoryinterface.h \
+		/usr/include/qt5/QtCore/qlibrary.h \
+		/usr/include/qt5/QtCore/qplugin.h \
+		/usr/include/qt5/QtCore/qpluginloader.h \
+		/usr/include/qt5/QtCore/quuid.h \
+		/usr/include/qt5/QtCore/qabstractstate.h \
+		/usr/include/qt5/QtCore/qabstracttransition.h \
+		/usr/include/qt5/QtCore/qeventtransition.h \
+		/usr/include/qt5/QtCore/qfinalstate.h \
+		/usr/include/qt5/QtCore/qhistorystate.h \
+		/usr/include/qt5/QtCore/qsignaltransition.h \
+		/usr/include/qt5/QtCore/qstate.h \
+		/usr/include/qt5/QtCore/qstatemachine.h \
+		/usr/include/qt5/QtCore/qexception.h \
+		/usr/include/qt5/QtCore/qfuture.h \
+		/usr/include/qt5/QtCore/qfutureinterface.h \
+		/usr/include/qt5/QtCore/qrunnable.h \
+		/usr/include/qt5/QtCore/qresultstore.h \
+		/usr/include/qt5/QtCore/qfuturesynchronizer.h \
+		/usr/include/qt5/QtCore/qfuturewatcher.h \
+		/usr/include/qt5/QtCore/qreadwritelock.h \
+		/usr/include/qt5/QtCore/qsemaphore.h \
+		/usr/include/qt5/QtCore/qthreadpool.h \
+		/usr/include/qt5/QtCore/qthreadstorage.h \
+		/usr/include/qt5/QtCore/qwaitcondition.h \
+		/usr/include/qt5/QtCore/qarraydataops.h \
+		/usr/include/qt5/QtCore/qarraydatapointer.h \
+		/usr/include/qt5/QtCore/qbitarray.h \
+		/usr/include/qt5/QtCore/qbytearraymatcher.h \
+		/usr/include/qt5/QtCore/qcache.h \
+		/usr/include/qt5/QtCore/qcollator.h \
+		/usr/include/qt5/QtCore/qcommandlineoption.h \
+		/usr/include/qt5/QtCore/qcommandlineparser.h \
+		/usr/include/qt5/QtCore/qcryptographichash.h \
+		/usr/include/qt5/QtCore/qelapsedtimer.h \
+		/usr/include/qt5/QtCore/qlinkedlist.h \
+		/usr/include/qt5/QtCore/qmessageauthenticationcode.h \
+		/usr/include/qt5/QtCore/qqueue.h \
+		/usr/include/qt5/QtCore/qregularexpression.h \
+		/usr/include/qt5/QtCore/qscopedvaluerollback.h \
+		/usr/include/qt5/QtCore/qstack.h \
+		/usr/include/qt5/QtCore/qtextboundaryfinder.h \
+		/usr/include/qt5/QtCore/qtimeline.h \
+		/usr/include/qt5/QtCore/qtimezone.h \
+		/usr/include/qt5/QtCore/qxmlstream.h \
+		/usr/include/qt5/QtCore/qtcoreversion.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentcompilertest.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrent_global.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentexception.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentfilter.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentfilterkernel.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentiteratekernel.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentmedian.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentthreadengine.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentmapkernel.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentreducekernel.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentfunctionwrappers.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentmap.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentrun.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentrunbase.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentstoredfunctioncall.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentversion.h \
+		/usr/include/qt5/QtCore/QFuture \
 		/usr/include/qt5/QtWidgets/QApplication \
 		/usr/include/qt5/QtWidgets/qapplication.h \
-		/usr/include/qt5/QtCore/qcoreapplication.h \
-		/usr/include/qt5/QtCore/qeventloop.h \
 		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
 		/usr/include/qt5/QtGui/qguiapplication.h \
 		/usr/include/qt5/QtGui/qinputmethod.h
@@ -1095,6 +1363,8 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtWidgets/qlabel.h \
 		/usr/include/qt5/QtWidgets/qframe.h \
 		tictactoe.h \
+		cell.h \
+		board.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtWidgets/QMainWindow \
 		/usr/include/qt5/QtWidgets/qmainwindow.h \
@@ -1106,6 +1376,132 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtCore/QDebug \
 		/usr/include/qt5/QtCore/QThread \
 		/usr/include/qt5/QtCore/qthread.h \
+		/usr/include/qt5/QtConcurrent/QtConcurrent \
+		/usr/include/qt5/QtConcurrent/QtConcurrentDepends \
+		/usr/include/qt5/QtCore/QtCore \
+		/usr/include/qt5/QtCore/QtCoreDepends \
+		/usr/include/qt5/QtCore/qabstractanimation.h \
+		/usr/include/qt5/QtCore/qanimationgroup.h \
+		/usr/include/qt5/QtCore/qparallelanimationgroup.h \
+		/usr/include/qt5/QtCore/qpauseanimation.h \
+		/usr/include/qt5/QtCore/qpropertyanimation.h \
+		/usr/include/qt5/QtCore/qvariantanimation.h \
+		/usr/include/qt5/QtCore/qeasingcurve.h \
+		/usr/include/qt5/QtCore/qsequentialanimationgroup.h \
+		/usr/include/qt5/QtCore/qtextcodec.h \
+		/usr/include/qt5/QtCore/qendian.h \
+		/usr/include/qt5/QtCore/qlibraryinfo.h \
+		/usr/include/qt5/QtCore/qdatetime.h \
+		/usr/include/qt5/QtCore/qnumeric.h \
+		/usr/include/qt5/QtCore/qbuffer.h \
+		/usr/include/qt5/QtCore/qdir.h \
+		/usr/include/qt5/QtCore/qfileinfo.h \
+		/usr/include/qt5/QtCore/qdiriterator.h \
+		/usr/include/qt5/QtCore/qfileselector.h \
+		/usr/include/qt5/QtCore/QStringList \
+		/usr/include/qt5/QtCore/qfilesystemwatcher.h \
+		/usr/include/qt5/QtCore/qlockfile.h \
+		/usr/include/qt5/QtCore/qloggingcategory.h \
+		/usr/include/qt5/QtCore/qprocess.h \
+		/usr/include/qt5/QtCore/qresource.h \
+		/usr/include/qt5/QtCore/qsavefile.h \
+		/usr/include/qt5/QtCore/qsettings.h \
+		/usr/include/qt5/QtCore/qstandardpaths.h \
+		/usr/include/qt5/QtCore/qtemporarydir.h \
+		/usr/include/qt5/QtCore/QScopedPointer \
+		/usr/include/qt5/QtCore/qtemporaryfile.h \
+		/usr/include/qt5/QtCore/qabstractitemmodel.h \
+		/usr/include/qt5/QtCore/qabstractproxymodel.h \
+		/usr/include/qt5/QtCore/qidentityproxymodel.h \
+		/usr/include/qt5/QtCore/qitemselectionmodel.h \
+		/usr/include/qt5/QtCore/qsortfilterproxymodel.h \
+		/usr/include/qt5/QtCore/qstringlistmodel.h \
+		/usr/include/qt5/QtCore/qjsonarray.h \
+		/usr/include/qt5/QtCore/qjsonvalue.h \
+		/usr/include/qt5/QtCore/qjsondocument.h \
+		/usr/include/qt5/QtCore/qjsonobject.h \
+		/usr/include/qt5/QtCore/qabstracteventdispatcher.h \
+		/usr/include/qt5/QtCore/qeventloop.h \
+		/usr/include/qt5/QtCore/qabstractnativeeventfilter.h \
+		/usr/include/qt5/QtCore/qbasictimer.h \
+		/usr/include/qt5/QtCore/qcoreapplication.h \
+		/usr/include/qt5/QtCore/qmath.h \
+		/usr/include/qt5/QtCore/qmetaobject.h \
+		/usr/include/qt5/QtCore/qmimedata.h \
+		/usr/include/qt5/QtCore/qobjectcleanuphandler.h \
+		/usr/include/qt5/QtCore/qpointer.h \
+		/usr/include/qt5/QtCore/qsharedmemory.h \
+		/usr/include/qt5/QtCore/qsignalmapper.h \
+		/usr/include/qt5/QtCore/qsocketnotifier.h \
+		/usr/include/qt5/QtCore/qsystemsemaphore.h \
+		/usr/include/qt5/QtCore/qtimer.h \
+		/usr/include/qt5/QtCore/qtranslator.h \
+		/usr/include/qt5/QtCore/qwineventnotifier.h \
+		/usr/include/qt5/QtCore/qmimedatabase.h \
+		/usr/include/qt5/QtCore/qmimetype.h \
+		/usr/include/qt5/QtCore/qfactoryinterface.h \
+		/usr/include/qt5/QtCore/qlibrary.h \
+		/usr/include/qt5/QtCore/qplugin.h \
+		/usr/include/qt5/QtCore/qpluginloader.h \
+		/usr/include/qt5/QtCore/quuid.h \
+		/usr/include/qt5/QtCore/qabstractstate.h \
+		/usr/include/qt5/QtCore/qabstracttransition.h \
+		/usr/include/qt5/QtCore/qeventtransition.h \
+		/usr/include/qt5/QtCore/qfinalstate.h \
+		/usr/include/qt5/QtCore/qhistorystate.h \
+		/usr/include/qt5/QtCore/qsignaltransition.h \
+		/usr/include/qt5/QtCore/qstate.h \
+		/usr/include/qt5/QtCore/qstatemachine.h \
+		/usr/include/qt5/QtCore/qexception.h \
+		/usr/include/qt5/QtCore/qfuture.h \
+		/usr/include/qt5/QtCore/qfutureinterface.h \
+		/usr/include/qt5/QtCore/qrunnable.h \
+		/usr/include/qt5/QtCore/qresultstore.h \
+		/usr/include/qt5/QtCore/qfuturesynchronizer.h \
+		/usr/include/qt5/QtCore/qfuturewatcher.h \
+		/usr/include/qt5/QtCore/qreadwritelock.h \
+		/usr/include/qt5/QtCore/qsemaphore.h \
+		/usr/include/qt5/QtCore/qthreadpool.h \
+		/usr/include/qt5/QtCore/qthreadstorage.h \
+		/usr/include/qt5/QtCore/qwaitcondition.h \
+		/usr/include/qt5/QtCore/qarraydataops.h \
+		/usr/include/qt5/QtCore/qarraydatapointer.h \
+		/usr/include/qt5/QtCore/qbitarray.h \
+		/usr/include/qt5/QtCore/qbytearraymatcher.h \
+		/usr/include/qt5/QtCore/qcache.h \
+		/usr/include/qt5/QtCore/qcollator.h \
+		/usr/include/qt5/QtCore/qcommandlineoption.h \
+		/usr/include/qt5/QtCore/qcommandlineparser.h \
+		/usr/include/qt5/QtCore/qcryptographichash.h \
+		/usr/include/qt5/QtCore/qelapsedtimer.h \
+		/usr/include/qt5/QtCore/qlinkedlist.h \
+		/usr/include/qt5/QtCore/qmessageauthenticationcode.h \
+		/usr/include/qt5/QtCore/qqueue.h \
+		/usr/include/qt5/QtCore/qregularexpression.h \
+		/usr/include/qt5/QtCore/qscopedvaluerollback.h \
+		/usr/include/qt5/QtCore/qstack.h \
+		/usr/include/qt5/QtCore/qtextboundaryfinder.h \
+		/usr/include/qt5/QtCore/qtimeline.h \
+		/usr/include/qt5/QtCore/qtimezone.h \
+		/usr/include/qt5/QtCore/qxmlstream.h \
+		/usr/include/qt5/QtCore/qtcoreversion.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentcompilertest.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrent_global.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentexception.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentfilter.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentfilterkernel.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentiteratekernel.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentmedian.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentthreadengine.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentmapkernel.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentreducekernel.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentfunctionwrappers.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentmap.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentrun.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentrunbase.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentstoredfunctioncall.h \
+		/usr/include/qt5/QtConcurrent/qtconcurrentversion.h \
+		/usr/include/qt5/QtCore/QFuture \
 		ui_mainwindow.h \
 		/usr/include/qt5/QtCore/QVariant \
 		/usr/include/qt5/QtWidgets/QAction \
@@ -1113,8 +1509,6 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtWidgets/qactiongroup.h \
 		/usr/include/qt5/QtWidgets/QApplication \
 		/usr/include/qt5/QtWidgets/qapplication.h \
-		/usr/include/qt5/QtCore/qcoreapplication.h \
-		/usr/include/qt5/QtCore/qeventloop.h \
 		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
 		/usr/include/qt5/QtGui/qguiapplication.h \
 		/usr/include/qt5/QtGui/qinputmethod.h \
@@ -1126,13 +1520,10 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtWidgets/qheaderview.h \
 		/usr/include/qt5/QtWidgets/qabstractitemview.h \
 		/usr/include/qt5/QtWidgets/qabstractscrollarea.h \
-		/usr/include/qt5/QtCore/qabstractitemmodel.h \
-		/usr/include/qt5/QtCore/qitemselectionmodel.h \
 		/usr/include/qt5/QtWidgets/qabstractitemdelegate.h \
 		/usr/include/qt5/QtWidgets/qstyleoption.h \
 		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
 		/usr/include/qt5/QtGui/qvalidator.h \
-		/usr/include/qt5/QtCore/qregularexpression.h \
 		/usr/include/qt5/QtWidgets/qslider.h \
 		/usr/include/qt5/QtWidgets/qabstractslider.h \
 		/usr/include/qt5/QtWidgets/qstyle.h \
@@ -1149,6 +1540,8 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
 
 tictactoe.o: tictactoe.cpp tictactoe.h \
+		cell.h \
+		board.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -1231,6 +1624,41 @@ tictactoe.o: tictactoe.cpp tictactoe.h \
 
 strategy.o: strategy.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o strategy.o strategy.cpp
+
+board.o: board.cpp board.h \
+		cell.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o board.o board.cpp
+
+cell.o: cell.cpp cell.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cell.o cell.cpp
+
+montebot.o: montebot.cpp montebot.h \
+		move.h \
+		cell.h \
+		board.h \
+		tictactoeboard.h \
+		game.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o montebot.o montebot.cpp
+
+game.o: game.cpp game.h \
+		move.h \
+		cell.h \
+		board.h \
+		tictactoeboard.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o game.o game.cpp
+
+tictactoeboard.o: tictactoeboard.cpp tictactoeboard.h \
+		cell.h \
+		board.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tictactoeboard.o tictactoeboard.cpp
+
+randombot.o: randombot.cpp randombot.h \
+		game.h \
+		move.h \
+		cell.h \
+		board.h \
+		tictactoeboard.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o randombot.o randombot.cpp
 
 moc_dialog.o: moc_dialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_dialog.o moc_dialog.cpp

@@ -1,6 +1,8 @@
 #ifndef TICTACTOE_H
 #define TICTACTOE_H
 
+#include "montebot.h"
+
 #include <iostream>
 #include <vector>
 #include <QObject>
@@ -45,6 +47,7 @@ const int BY_SLOT[9][5] = {
     {3,2,5,6}
 };
 
+
 class TicTacToe : public QObject
 {
     Q_OBJECT
@@ -87,6 +90,10 @@ public:
     int alphaBeta(std::vector<int>& board,int last_slot,int player, int next_player,int alpha, int beta, int depth, int score_so_far, int last_move_won);
 
 
+    //Monte Carlo Simulation
+
+
+
 signals:
     void humanMoves();
     void computerMove(int,int);
@@ -107,6 +114,11 @@ private:
     std::array<std::vector<int>,9> boards;        //Array that contains all boards from each Grid
 
     int rets[2] = {};
+
+
+    MonteBot montebot;
+
+    //std::vector<Cell> validMoves;
 
 };
 

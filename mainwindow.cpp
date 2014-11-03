@@ -412,3 +412,9 @@ void MainWindow::prediction(QString prediction){
     ui->predictor->setText(prediction);
 
 }
+
+
+
+//MonteCarlo
+
+void

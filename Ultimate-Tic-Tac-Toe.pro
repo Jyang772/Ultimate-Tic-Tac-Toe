@@ -11,7 +11,20 @@ TARGET = TTT
 INCLUDEPATH += .
 
 # Input
-HEADERS += dialog.h mainwindow.h tictactoe.h
+HEADERS += dialog.h mainwindow.h tictactoe.h \
+    board.h \
+    cell.h \
+    montebot.h \
+    game.h \
+    tictactoeboard.h \
+    move.h \
+    randombot.h
 FORMS += dialog.ui mainwindow.ui
 SOURCES += dialog.cpp main.cpp mainwindow.cpp tictactoe.cpp \
-    strategy.cpp
+    strategy.cpp \
+    board.cpp \
+    cell.cpp \
+    montebot.cpp \
+    game.cpp \
+    tictactoeboard.cpp \
+    randombot.cpp

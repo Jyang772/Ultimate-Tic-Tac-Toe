@@ -181,7 +181,7 @@ int TicTacToe::ultWin(){
     int lol = winner(gridStates);
     qDebug() << "ULIMATE WIN: " << lol;
     //return winner(gridStates);
-                return lol;
+    return lol;
 }
 
 void TicTacToe::utility(int currentGrid,int move,int depth){
@@ -317,14 +317,14 @@ int TicTacToe::pickMove(int currentGrid,int player, int& best){
     else{
         rv = my_moves.back();
 
-//        if(my_moves.size() > 1){
-//            int r = std::rand() % my_moves.size();
-//            rv = my_moves[r];
+        //        if(my_moves.size() > 1){
+        //            int r = std::rand() % my_moves.size();
+        //            rv = my_moves[r];
 
-//            for(auto i : my_moves)
-//                qDebug() << "MMOVES!!: " << i;
-//            qDebug() << "Move chosen: " <<  rv;
-//        }
+        //            for(auto i : my_moves)
+        //                qDebug() << "MMOVES!!: " << i;
+        //            qDebug() << "Move chosen: " <<  rv;
+        //        }
     }
 
     if(bestScore > THRESHOLD)
@@ -389,3 +389,4 @@ int TicTacToe::alphaBeta(std::vector<int>& board,int last_slot,int player, int n
     return score;
 
 }
+
