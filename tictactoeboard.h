@@ -4,11 +4,15 @@
 #include "cell.h"
 #include "board.h"
 
+#include <QObject>
 #include <vector>
 
 
 class TicTacToeBoard
 {
+signals:
+    void highlight(int row, int col);
+
 public:
     TicTacToeBoard(){}
     TicTacToeBoard(int row, int col);
@@ -20,6 +24,8 @@ public:
     void getEmptyCells(std::vector<Cell> &validCells);
     bool playCell(int row, int col, int player);
     bool playCellSilently(int row, int col, int player);
+
+    void highlight_(int row, int col);
 
     bool operator!=(const TicTacToeBoard&);
 

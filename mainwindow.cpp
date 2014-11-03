@@ -168,6 +168,19 @@ int MainWindow::itemClicked(){
     }
     //else if(!game->isLegal(clickedItem->objectName().toInt(),currentGrid))
         //invalidMove();
+
+
+    int board = clickedItem->parentWidget()->objectName().toInt();
+    int board_row =  board / 3;
+    int board_col = board % 3;
+    int cell_row = clickedItem->objectName().toInt();
+    int cell_col = clickedItem->objectName().toInt();
+
+    qDebug() << "board_row: " << board_row << " board_col: " << board_col << endl;
+    qDebug() << "cell_row: " << cell_row << " cell_col: " << cell_col << endl;
+
+    //newgame.PlayCell(board_row,board_col,cell_row,cell_col);
+    //computerMoves();
 }
 
 void MainWindow::begin(int strength){
@@ -417,4 +430,17 @@ void MainWindow::prediction(QString prediction){
 
 //MonteCarlo
 
-void
+void MainWindow::computerMoves(){
+
+
+    QTime myTimer;
+    myTimer.start();
+
+    montebot.StartCalculation(newgame);
+
+    while(myTimer.elapsed() < montebot.botThinkingTime){
+        montebot.CalculateAhead(newgame);
+    }
+
+    montebot.Play(newgame);
+}

@@ -139,8 +139,6 @@ bool TicTacToeBoard::checkWon(int row, int col){
     return false;
 }
 
-
-
 bool TicTacToeBoard::operator !=(const TicTacToeBoard& board){
 
     if(&this->cells != &board.cells)
