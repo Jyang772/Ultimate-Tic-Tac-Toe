@@ -1,4 +1,5 @@
 #include "montebot.h"
+#include <QDebug>
 
 MonteBot::MonteBot()
 {
@@ -7,15 +8,20 @@ MonteBot::MonteBot()
 
 void MonteBot::StartCalculation(Game &game){
     Move move;
-    std::vector<Move> validMoves = game.getValidMoves();
 
-    Game clone;
+    //qDebug() << "Starting calculations";
+    //qDebug() << "game.currentBoard_valid: " << game.currentBoard_valid;
+    std::vector<Move> validMoves = game.getValidMoves();
+    //qDebug() << "Withing";
+
+    Game *clone;
 
     endThinkTime = /*Time passed*/ + botThinkingTime;
 
     for(int i=0; i<validMoves.size(); i++){
         move = validMoves[i];
-        clone.playCellSilently(move.bRow,move.bCol,move.cRow,move.cCol);
+        clone = new Game(game);
+        clone->playCellSilently(move.bRow,move.bCol,move.cRow,move.cCol);
 
         Clone clone_;
 
@@ -23,14 +29,14 @@ void MonteBot::StartCalculation(Game &game){
         clone_.boardCol = move.bCol;
         clone_.cellRow = move.cRow;
         clone_.cellCol = move.cCol;
-        //clone_.clone = clone;
+        clone_.clone = *clone;
         clone_.wins = 0;
         clone_.weightedWins = 0;
         clone_.losses = 0;
         clone_.weightedLosses = 0;
         clone_.ties = 0;
 
-        //clones.push_back(clone_);
+       clones.push_back(clone_);
     }
 
 }
@@ -41,18 +47,21 @@ void MonteBot::CalculateAhead(Game &game){
     randomBot random;
 
     for(int i=0; i<clones.size(); i++){
-        Clone move = clones[i];
-        //Game simGame = Game(move.clone);
-        Game simGame;
+        Clone &move = clones[i];
 
-        int winner = random.playOutHidden(simGame);
-        int weight = 1;
+        Game *simGame = new Game(move.clone);
+
+        int winner = random.playOutHidden(*simGame);
+        double weight = 1;
 
         if(monteWeightByGameLength){
-            int f = simGame.countFilled - game.countFilled;
-            int r = 81 - game.countFilled;
+            double f = simGame->countFilled - game.countFilled;
+            double r = 81 - game.countFilled;
+
 
             weight = (r-f)/r;
+            qDebug() << "Weight: " << weight;
+
         }
 
         if(winner == 0){
@@ -69,27 +78,45 @@ void MonteBot::CalculateAhead(Game &game){
             }
         }
     }
+
+
 }
 
 void MonteBot::Play(Game &game){
 
-//    int bestScore = -10000;
-//    Clone bestMove;
 
-//    for(int i=0; i<clones.size(); i++){
-//        int penalty = 1;
-//        Clone clone = clones[i];
+    int bestScore = -10000;
+    Clone bestMove;
 
-//        if(!clone.clone.currentBoard_valid){
-//            penalty = monteChoicePenalty;
-//        }
-//        int score = (clone.weightedWins - clone.weightedLosses*penalty) / (clone.wins + clone.losses + clone.ties);
+    for(int i=0; i<clones.size(); i++){
+        int penalty = 1;
+        Clone &clone = clones[i];
 
-//        if(score > bestScore){
-//            bestScore = score;
-//            bestMove = clone;
-//        }
-//    }
 
-    //Play Cell at bestMove.boardRow , etc.
+        if(!clone.clone.currentBoard_valid){
+            penalty = monteChoicePenalty;
+        }
+
+//        qDebug() << "clone.weightedWins: " << clone.weightedWins;
+//        qDebug() << "clone.weightedLosses: " << clone.weightedLosses;
+//        qDebug() << "clone.wins: " << clone.wins;
+//        qDebug() << "clone.losses: " << clone.losses;
+//        qDebug() << "clone.ties: " << clone.ties;
+
+        double score = (clone.weightedWins - clone.weightedLosses*penalty) / (clone.wins + clone.losses + clone.ties);
+
+        if(score > bestScore){
+            bestScore = score;
+            bestMove = clone;
+        }
+
+    }
+
+    qDebug() << "board_row: " << bestMove.boardRow;
+    qDebug() << "board_col: " << bestMove.boardCol;
+    qDebug() << "cell_row: " << bestMove.cellRow;
+    qDebug() << "cell_col: " << bestMove.cellCol;
+
+        //Play Cell at bestMove.boardRow , etc.
+    game.PlayCell(bestMove.boardRow,bestMove.boardCol,bestMove.cellRow,bestMove.cellCol);
 }

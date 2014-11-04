@@ -1,11 +1,45 @@
 #include "game.h"
+#include <QDebug>
 
 Game::Game()
 {
+    //transit->displayMessage("HELLO");
+
+    currentBoard_valid = 0;
+    currentPlayer = -1;
+    finished = false;
+    winner = 0;
+    countFilled = 0;
+
+
     for(int row=0; row<3; row++){
         for(int col=0; col<3; col++){
-            boards[row][col] = TicTacToeBoard(row,col);
+
+            TicTacToeBoard temp(row,col);
+            boards[row][col] = temp;
         }
+    }
+
+
+}
+
+
+Game::Game(Game &other){
+
+    currentBoard_valid = other.currentBoard_valid;
+    currentPlayer = other.currentPlayer;
+    finished = other.finished;
+    winner = other.winner;
+    countFilled = other.countFilled;
+
+    for(int row=0; row<3; row++){
+        for(int col=0; col<3; col++){
+            boards[row][col] = other.boards[row][col].clone();
+        }
+    }
+
+    if(other.currentBoard_valid){
+        *currentBoard = boards[other.currentBoard->row][other.currentBoard->col];
     }
 
 }
@@ -55,8 +89,8 @@ bool Game::checkWonGame(int row, int col, bool silent){
 
 void Game::playCellSilently(int board_row, int board_col, int cell_row, int cell_col){
 
-    TicTacToeBoard board = boards[board_row][board_col];
-    Cell cell = *board.cells[cell_row][cell_col];
+    TicTacToeBoard &board = boards[board_row][board_col];
+    //Cell cell = *board.cells[cell_row][cell_col];
 
     bool justWon = board.playCellSilently(cell_col,cell_col,currentPlayer);
 
@@ -66,16 +100,19 @@ void Game::playCellSilently(int board_row, int board_col, int cell_row, int cell
         if(checkWonGame(board_row,board_col,true)){
             finished = true;
             winner = currentPlayer;
+//            qDebug() << "winner: " << currentPlayer;
+//            qDebug() << "game.finished: " << finished;
             return;
         }
     }
 
-    currentBoard = boards[cell_row][cell_col];
-    if(currentBoard.isFull()){
-        currentBoard = {};
+    currentBoard = &boards[cell_row][cell_col];
+    if(currentBoard->isFull()){
+        qDebug() << "currentBoard is full";
+        currentBoard = NULL;
     }
-    else if(currentBoard.winner && useRule5b){
-        currentBoard = {};
+    else if(currentBoard->winner && useRule5b){
+        currentBoard = NULL;
     }
 
     //Check for Draws
@@ -115,9 +152,10 @@ std::vector<TicTacToeBoard> Game::getNonFinishedBoards(){
 
 std::vector<Move> Game::getValidMoves(){
 
+
     std::vector<TicTacToeBoard> validBoards;
     if(currentBoard_valid){
-        validBoards.push_back(currentBoard);
+        validBoards.push_back(*currentBoard);
     }
     else{
         //Choose random Board
@@ -126,7 +164,10 @@ std::vector<Move> Game::getValidMoves(){
         }
     }
 
+
     std::vector<Move> validMoves;
+    //qDebug() << "Game::getValidMoves()";
+    //qDebug() << "validBoards.size(): " << validBoards.size();
 
     for(int i=0; i<validBoards.size(); i++){
         TicTacToeBoard board = validBoards[i];
@@ -142,15 +183,20 @@ std::vector<Move> Game::getValidMoves(){
         }
     }
 
+    //qDebug() << "Returning from Game::getValidMoves()";
+
     return validMoves;
 }
 
 void Game::PlayCell(int board_row, int board_col, int cell_row, int cell_col){
+    //qDebug() << "Game::PlayCell";
+    //qDebug() << "CurrentPlayer: " << currentPlayer;
+    //qDebug() << "board_row: " << board_row;
 
     TicTacToeBoard board = boards[board_row][board_col];
 
-    if(currentBoard_valid && board != currentBoard){
-        //qDebug() << "ERROR";
+    if(currentBoard_valid && board != *currentBoard){
+        qDebug() << "ERROR";
         return;
     }
 
@@ -161,6 +207,9 @@ void Game::PlayCell(int board_row, int board_col, int cell_row, int cell_col){
     }
 
     bool justWon = board.playCell(cell_row, cell_col, currentPlayer);
+
+    //qDebug() << "test";
+    transit->highlight(board_row,board_col,cell_row,cell_col);
 
     countFilled += 1;
     if(currentBoard_valid){
@@ -176,14 +225,14 @@ void Game::PlayCell(int board_row, int board_col, int cell_row, int cell_col){
         }
     }
 
-    currentBoard = boards[cell_row][cell_col];
-    if(currentBoard.isFull()){
+    currentBoard = &boards[cell_row][cell_col];
+    if(currentBoard->isFull()){
         currentBoard_valid = 0;
         if(countFilled = 81){
             finished = true;
             //DRAW!!
         }
-        else if( currentBoard.winner && useRule5b){
+        else if( currentBoard->winner && useRule5b){
             if(!getNonFinishedBoards().size()){
                 finished = true;
                 //DRAW!!!
@@ -200,5 +249,7 @@ void Game::PlayCell(int board_row, int board_col, int cell_row, int cell_col){
     else{
         currentPlayer = -1;
     }
+
+    qDebug() << "Returning from Game::PlayCell";
 
 }

@@ -1,4 +1,5 @@
 #include "tictactoeboard.h"
+#include <QDebug>
 
 TicTacToeBoard::TicTacToeBoard(int row, int col) : row(row), col(col)
 {
@@ -12,16 +13,16 @@ TicTacToeBoard::TicTacToeBoard(int row, int col) : row(row), col(col)
 
 TicTacToeBoard TicTacToeBoard::clone(){
 
-    TicTacToeBoard clone = TicTacToeBoard(row,col);
-    clone.winner = winner;
+    TicTacToeBoard *clone = new TicTacToeBoard(row,col);
+    clone->winner = winner;
 
     for(int i=0; i<3; i++){
         for(int j=0; j<3; j++){
-            *clone.cells[i][j] = cells[i][j]->clone();
+            *clone->cells[i][j] = cells[i][j]->clone();
         }
     }
 
-    return clone;
+    return *clone;
 }
 
 bool TicTacToeBoard::isFull(){
@@ -52,10 +53,10 @@ void TicTacToeBoard::getEmptyCells(std::vector<Cell> &validCells){
 
 bool TicTacToeBoard::playCell(int row, int col, int player){
 
-    Cell cell = *cells[row][col];
+    Cell *cell = cells[row][col];
 
-    if(!cell.owner){
-        cell.playCell(player);
+    if(!cell->owner){
+        cell->playCell(player);
         bool won = false;
 
         if(!winner){
@@ -65,6 +66,8 @@ bool TicTacToeBoard::playCell(int row, int col, int player){
                 for(int i=0; i<3; i++){
                     for(int j=0; j<3; j++){
                         cells[i][j]->winner = player;
+                        //Transmit winning rows, cols
+                        //transit->highlight();
                     }
                 }
             }
@@ -79,8 +82,8 @@ bool TicTacToeBoard::playCell(int row, int col, int player){
 
 bool TicTacToeBoard::playCellSilently(int row, int col, int player){
 
-    Cell cell = *cells[row][col];
-    cell.owner = player;
+    Cell *cell = cells[row][col];
+    cell->owner = player;
 
     if(!this->winner){
         bool justWon = this->checkWon(row,col);

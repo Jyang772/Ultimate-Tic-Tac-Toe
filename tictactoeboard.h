@@ -2,13 +2,16 @@
 #define TICTACTOEBOARD_H
 
 #include "cell.h"
-#include "board.h"
+#include "transmitter.h"
 
+#include <QObject>
 #include <vector>
 
 
 class TicTacToeBoard
 {
+signals:
+    void highlight(int row, int col);
 
 public:
     TicTacToeBoard(){}
@@ -28,9 +31,12 @@ public:
 
     int row;
     int col;
-    int winner = -99;
+    int winner = 0;
+    int currentBoard_valid = 0;
 
     Cell *cells[3][3];
+
+    Transmitter *transit = new Transmitter();
 };
 
 #endif // TICTACTOEBOARD_H

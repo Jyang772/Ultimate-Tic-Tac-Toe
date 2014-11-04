@@ -11,8 +11,8 @@ public:
 
     int row;
     int col;
-    int owner;
-    int winner;
+    int owner = 0;
+    int winner = 0;
 };
 
 #endif // CELL_H

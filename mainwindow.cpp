@@ -26,7 +26,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(game,SIGNAL(computerMove(int,int)),this,SLOT(computerMove(int,int)));
     connect(game,SIGNAL(prediction(QString)),this,SLOT(prediction(QString)));
 
-    //connect(this,SIGNAL(computer_(int,int)),this,SLOT(computer(int,int)));
+
+
+    connect(transit,SIGNAL(display(QString)),this,SLOT(prediction(QString)));
+    newgame.transit = transit; //Connect Game's transmitter to Mainwindow's transmitter
 
     pthread->start();
 }
@@ -191,10 +194,15 @@ void MainWindow::begin(int strength){
     this->strength = strength;
     game->setDepth(strength);
 
+
+    //newgame.transit->displayMessage("LOL");
+
     if(options->getChar() == 'O'){
         text.append(". Computer moves first.");
         player = 1;
-        game->CalculateGrid(4,1); //Computer moves.
+        //game->CalculateGrid(4,1); //Computer moves.
+        computerMoves();
+
     }
     else{
         text.append(". Select a square.");
@@ -436,11 +444,17 @@ void MainWindow::computerMoves(){
     QTime myTimer;
     myTimer.start();
 
+    montebot.botThinkingTime = 1000;
+
     montebot.StartCalculation(newgame);
+    qDebug() << "Finished computer move";
 
     while(myTimer.elapsed() < montebot.botThinkingTime){
         montebot.CalculateAhead(newgame);
     }
 
+    qDebug() << "BOT PLAYS";
     montebot.Play(newgame);
+    qDebug() << "DONE";
+
 }

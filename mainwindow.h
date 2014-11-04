@@ -5,6 +5,7 @@
 #include "tictactoe.h"
 #include "montebot.h"
 #include "game.h"
+#include "transmitter.h"
 
 #include <string.h>
 #include <iostream>
@@ -25,7 +26,6 @@ class MainWindow : public QMainWindow
 
 public:
     int player = 1; //Keeps track of current
-
 
     explicit MainWindow(QWidget *parent = 0);
     void setUpGrid();
@@ -98,6 +98,7 @@ private:
 
     MonteBot montebot;
     Game newgame;
+    Transmitter *transit = new Transmitter();
 
 };
 

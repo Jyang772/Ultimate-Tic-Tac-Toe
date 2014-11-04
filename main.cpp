@@ -2,11 +2,6 @@
 #include <QApplication>
 
 
-void play();
-
-
-
-
 int main(int argc, char *argv[])
 {
 
@@ -58,35 +53,6 @@ int main(int argc, char *argv[])
 
         //Do stuff
     }
-
-
-}
-
-void play(){
-
-
-//    bool winner = false;
-//    int currentGrid;
-
-
-//    while(!winner){
-
-//        if(w.player == -1){
-//            w.humanMoves();
-
-//            currentGrid = w.itemClicked();
-
-//            w.player = 1;
-//        }
-//        else{
-//            w.computer(currentGrid);
-//            w.player = -1;
-//        }
-
-
-//        //Check for winner every turn
-//        w.CheckWinner(currentGrid);
-//    }
 
 
 }
