@@ -93,7 +93,7 @@ void MonteBot::Play(Game &game){
         Clone &clone = clones[i];
 
 
-        if(!clone.clone.currentBoard_valid){
+        if(!clone.clone.currentBoard){
             penalty = monteChoicePenalty;
         }
 

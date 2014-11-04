@@ -155,6 +155,7 @@ std::vector<Move> Game::getValidMoves(){
 
 
     std::vector<TicTacToeBoard> validBoards;
+
     if(currentBoard_valid){
         validBoards.push_back(*currentBoard);
     }
@@ -189,16 +190,16 @@ std::vector<Move> Game::getValidMoves(){
     return validMoves;
 }
 
-void Game::PlayCell(int board_row, int board_col, int cell_row, int cell_col){
+bool Game::PlayCell(int board_row, int board_col, int cell_row, int cell_col){
     qDebug() << "Game::PlayCell";
     //qDebug() << "CurrentPlayer: " << currentPlayer;
     //qDebug() << "board_row: " << board_row;
 
     TicTacToeBoard &board = boards[board_row][board_col];
 
-    if(currentBoard_valid && board != *currentBoard){
+    if(currentBoard && board != *currentBoard){
         qDebug() << "INVALID MOVE";
-        return;
+        return false;
     }
 
     qDebug() << "Cell_row: " << cell_row;
@@ -207,7 +208,7 @@ void Game::PlayCell(int board_row, int board_col, int cell_row, int cell_col){
 
     if(cell->owner){
         qDebug() << "OI";
-        return;
+        return false;
     }
 
     bool justWon = board.playCell(cell_row, cell_col, currentPlayer);
@@ -225,7 +226,7 @@ void Game::PlayCell(int board_row, int board_col, int cell_row, int cell_col){
             finished = true;
             winner = currentPlayer;
             //Show winning screen
-            return;
+            return true;
         }
     }
 
@@ -250,9 +251,15 @@ void Game::PlayCell(int board_row, int board_col, int cell_row, int cell_col){
     if(currentPlayer == -1){
         transit->computerMove(board_row,board_col, cell_row, cell_col);
         currentPlayer = 1;
+
+        qDebug() << "CurrentBoard: ";
+        qDebug() << "CurrentBoard.row: " << currentBoard->row;
+        qDebug() << "CurrentBoard.col: " << currentBoard->col;
     }
     else{
         currentPlayer = -1;
+        qDebug() << "CurrentBoard.row: " << currentBoard->row;
+        qDebug() << "CurrentBoard.col: " << currentBoard->col;
     }
 
     qDebug() << "Returning from Game::PlayCell";

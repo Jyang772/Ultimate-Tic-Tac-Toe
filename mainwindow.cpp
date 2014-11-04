@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(options,SIGNAL(choosen(int)),this,SLOT(begin(int)));
     //connect(game,SIGNAL(humanMoves()),this,SLOT(humanMoves()));
-    connect(game,SIGNAL(computerMove(int,int)),this,SLOT(computerMove(int,int)));
+    //connect(game,SIGNAL(computerMove(int,int)),this,SLOT(computerMove(int,int)));
     connect(game,SIGNAL(prediction(QString)),this,SLOT(prediction(QString)));
 
 
@@ -144,7 +144,7 @@ int MainWindow::itemClicked(){
 
     currentGrid = clickedItem->parent()->objectName().toInt();
 
-    clickedItem->setText(QString(QChar('X')));
+    // clickedItem->setText(QString(QChar('X')));
 
 
 
@@ -157,10 +157,17 @@ int MainWindow::itemClicked(){
     qDebug() << "board_row: " << board_row << " board_col: " << board_col << endl;
     qDebug() << "cell_row: " << cell_row << " cell_col: " << cell_col << endl;
 
-    newgame.PlayCell(board_row,board_col,cell_row,cell_col);
 
 
-    computerMoves();
+    if(!newgame.PlayCell(board_row,board_col,cell_row,cell_col))
+        qDebug() << "PLAYER, INVALID MOVE";
+    else{
+        clickedItem->setText(QString(QChar('X')));
+        computerMoves();
+    }
+
+
+
 }
 
 void MainWindow::begin(int strength){
@@ -392,6 +399,7 @@ void MainWindow::prediction(QString prediction){
 
 void MainWindow::computerMoves(){
 
+    humanTurn = false;
 
     QTime myTimer;
     myTimer.start();
@@ -408,5 +416,7 @@ void MainWindow::computerMoves(){
     qDebug() << "BOT PLAYS";
     montebot.Play(newgame);
     qDebug() << "DONE";
+
+    humanMoves();
 
 }

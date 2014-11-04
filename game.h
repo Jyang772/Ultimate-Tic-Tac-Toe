@@ -19,7 +19,7 @@ public:
     std::vector<TicTacToeBoard> getNonFinishedBoards();
     std::vector<Move> getValidMoves();
 
-    void PlayCell(int board_row, int board_col, int cell_row, int cell_col);
+    bool PlayCell(int board_row, int board_col, int cell_row, int cell_col);
 
 
     bool useRule5b = true;
