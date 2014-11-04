@@ -14,6 +14,7 @@ public:
 signals:
     void display(QString);
     void Win(int board_row, int board_col, int cell_row, int cell_col);
+    void computerMove(int board_row, int board_col, int cell_row, int cell_col);
 
 public slots:
 

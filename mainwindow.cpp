@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     connect(transit,SIGNAL(display(QString)),this,SLOT(prediction(QString)));
+    connect(transit,SIGNAL(computerMove(int,int,int,int)),this,SLOT(computerMove(int,int,int,int)));
     newgame.transit = transit; //Connect Game's transmitter to Mainwindow's transmitter
 
     pthread->start();
@@ -222,39 +223,14 @@ void MainWindow::humanMoves(){
 }
 
 
-void MainWindow::computerMove(int move,int grid){
+void MainWindow::computerMove(int board_row, int board_col, int cell_row, int cell_col){
 
+    int grid = board_row * 3 + board_col;
+    int slot = cell_row * 3 + cell_col;
 
-    //When the computer goes first.
-    if(grid != -1)
-        nextGrid = grid;
+    itemButtons[grid][slot]->setText(QString(QChar('O')));
+    itemButtons[grid][slot]->setStyleSheet("background-color: yellow");
 
-
-
-    qDebug() << "PLAYER: " << player;
-    humanTurn = false;
-    itemButtons[nextGrid][move]->setText(QString(QChar(game->gridChar(player))));
-
-    //Change player to opponent
-    if(player == 1)
-        player = -1;
-    else
-        player = 1;
-
-    colorBoard(nextGrid,move);
-
-    //Check if computer has won
-    CheckWinner(nextGrid);
-
-    //If not, then player's next move will be
-    nextGrid = move;
-
-    qDebug() << "Player must move here: " << nextGrid;
-
-    humanMoves();
-
-
-    //emit computer(nextGrid);
 }
 
 void MainWindow::CheckWinner(int grid){

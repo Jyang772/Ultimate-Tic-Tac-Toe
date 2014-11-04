@@ -61,7 +61,7 @@ private slots:
     void begin(int strength);
 
     void invalidMove();
-    void computerMove(int,int);
+    void computerMove(int board_row, int board_col, int cell_row, int cell_col);
 
 
     void on_playAgain_clicked();

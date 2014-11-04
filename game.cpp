@@ -244,6 +244,7 @@ void Game::PlayCell(int board_row, int board_col, int cell_row, int cell_col){
         }
     }
     if(currentPlayer == -1){
+        transit->computerMove(board_row,board_col, cell_row, cell_col);
         currentPlayer = 1;
     }
     else{
