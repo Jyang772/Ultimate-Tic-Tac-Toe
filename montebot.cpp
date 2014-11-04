@@ -12,6 +12,7 @@ void MonteBot::StartCalculation(Game &game){
     //qDebug() << "Starting calculations";
     //qDebug() << "game.currentBoard_valid: " << game.currentBoard_valid;
     std::vector<Move> validMoves = game.getValidMoves();
+    //qDebug() << "validMoves.size(): " << validMoves.size();
     //qDebug() << "Withing";
 
     Game *clone;

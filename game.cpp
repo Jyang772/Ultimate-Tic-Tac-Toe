@@ -1,12 +1,13 @@
 #include "game.h"
 #include <QDebug>
+#include <iostream>
 
 Game::Game()
 {
     //transit->displayMessage("HELLO");
 
     currentBoard_valid = 0;
-    currentBoard = NULL;
+    currentBoard = nullptr;
     currentPlayer = -1;
     finished = false;
     winner = 0;
@@ -27,7 +28,8 @@ Game::Game()
 
 Game::Game(Game &other){
 
-    currentBoard_valid = other.currentBoard_valid;
+    currentBoard = other.currentBoard;
+    //currentBoard_valid = other.currentBoard_valid;
     currentPlayer = other.currentPlayer;
     finished = other.finished;
     winner = other.winner;
@@ -39,7 +41,7 @@ Game::Game(Game &other){
         }
     }
 
-    if(other.currentBoard_valid){
+    if(other.currentBoard){
         *currentBoard = boards[other.currentBoard->row][other.currentBoard->col];
     }
 
@@ -156,7 +158,8 @@ std::vector<Move> Game::getValidMoves(){
 
     std::vector<TicTacToeBoard> validBoards;
 
-    if(currentBoard_valid){
+    if(currentBoard){
+
         validBoards.push_back(*currentBoard);
     }
     else{
@@ -165,7 +168,6 @@ std::vector<Move> Game::getValidMoves(){
             validBoards = getNonFinishedBoards();
         }
     }
-
 
     std::vector<Move> validMoves;
     //qDebug() << "Game::getValidMoves()";
