@@ -22,3 +22,14 @@ Cell Cell::clone(){
     clone.winner = this->winner;
     return clone;
 }
+
+bool Cell::operator !=(const Cell &other){
+
+    if(row != other.row)
+        return true;
+    if(col != other.col)
+        return true;
+
+
+    return false;
+}

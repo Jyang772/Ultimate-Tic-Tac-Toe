@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     connect(options,SIGNAL(choosen(int)),this,SLOT(begin(int)));
-    connect(game,SIGNAL(humanMoves()),this,SLOT(humanMoves()));
+    //connect(game,SIGNAL(humanMoves()),this,SLOT(humanMoves()));
     connect(game,SIGNAL(computerMove(int,int)),this,SLOT(computerMove(int,int)));
     connect(game,SIGNAL(prediction(QString)),this,SLOT(prediction(QString)));
 
@@ -144,47 +144,23 @@ int MainWindow::itemClicked(){
 
     currentGrid = clickedItem->parent()->objectName().toInt();
 
-    if(currentGrid != nextGrid && nextGrid != -1 && !wonGrids[nextGrid]){
-        qDebug() << "NOPE";
-        invalidMove();
-        return -1;
-    }
+    clickedItem->setText(QString(QChar('X')));
 
-    //Read user symbol, and set button to that symbol
-    if(humanTurn && game->isLegal(clickedItem->objectName().toInt(),currentGrid) && !wonGrids[currentGrid]){
-
-        clickedItem->setText(QString(QChar(game->gridChar(game->human))));        //Sets pushbutton text to player's char.
-
-        game->humanMove(clickedItem->objectName().toInt(),currentGrid);           //Sets subBoard with player's char
-
-
-        CheckWinner(currentGrid);
-        player = 1;
-
-        nextGrid = clickedItem->objectName().toInt();                             //next move for computer will need to be where player sent it to.
-
-
-       // emit computer_(nextGrid,1);
-        QFuture<void> future = QtConcurrent::run(this,&MainWindow::computer,nextGrid,1);
-        //game->CalculateGrid(nextGrid,1);
-        qDebug() << "RETURN: ";
-
-    }
-    //else if(!game->isLegal(clickedItem->objectName().toInt(),currentGrid))
-        //invalidMove();
 
 
     int board = clickedItem->parentWidget()->objectName().toInt();
     int board_row =  board / 3;
     int board_col = board % 3;
-    int cell_row = clickedItem->objectName().toInt();
-    int cell_col = clickedItem->objectName().toInt();
+    int cell_row = clickedItem->objectName().toInt() / 3;
+    int cell_col = clickedItem->objectName().toInt() % 3;
 
     qDebug() << "board_row: " << board_row << " board_col: " << board_col << endl;
     qDebug() << "cell_row: " << cell_row << " cell_col: " << cell_col << endl;
 
-    //newgame.PlayCell(board_row,board_col,cell_row,cell_col);
-    //computerMoves();
+    newgame.PlayCell(board_row,board_col,cell_row,cell_col);
+
+
+    computerMoves();
 }
 
 void MainWindow::begin(int strength){

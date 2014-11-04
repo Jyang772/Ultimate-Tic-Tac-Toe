@@ -6,6 +6,7 @@ Game::Game()
     //transit->displayMessage("HELLO");
 
     currentBoard_valid = 0;
+    currentBoard = NULL;
     currentPlayer = -1;
     finished = false;
     winner = 0;
@@ -100,8 +101,8 @@ void Game::playCellSilently(int board_row, int board_col, int cell_row, int cell
         if(checkWonGame(board_row,board_col,true)){
             finished = true;
             winner = currentPlayer;
-//            qDebug() << "winner: " << currentPlayer;
-//            qDebug() << "game.finished: " << finished;
+            //            qDebug() << "winner: " << currentPlayer;
+            //            qDebug() << "game.finished: " << finished;
             return;
         }
     }
@@ -189,26 +190,29 @@ std::vector<Move> Game::getValidMoves(){
 }
 
 void Game::PlayCell(int board_row, int board_col, int cell_row, int cell_col){
-    //qDebug() << "Game::PlayCell";
+    qDebug() << "Game::PlayCell";
     //qDebug() << "CurrentPlayer: " << currentPlayer;
     //qDebug() << "board_row: " << board_row;
 
-    TicTacToeBoard board = boards[board_row][board_col];
+    TicTacToeBoard &board = boards[board_row][board_col];
 
     if(currentBoard_valid && board != *currentBoard){
-        qDebug() << "ERROR";
+        qDebug() << "INVALID MOVE";
         return;
     }
 
-    Cell cell = *board.cells[cell_row][cell_col];
+    qDebug() << "Cell_row: " << cell_row;
+    qDebug() << "Cell_col: " << cell_col;
+    Cell *cell = board.cells[cell_row][cell_col];
 
-    if(cell.owner){
+    if(cell->owner){
+        qDebug() << "OI";
         return;
     }
 
     bool justWon = board.playCell(cell_row, cell_col, currentPlayer);
 
-    //qDebug() << "test";
+    qDebug() << "test";
     transit->highlight(board_row,board_col,cell_row,cell_col);
 
     countFilled += 1;

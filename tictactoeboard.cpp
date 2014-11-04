@@ -53,6 +53,7 @@ void TicTacToeBoard::getEmptyCells(std::vector<Cell> &validCells){
 
 bool TicTacToeBoard::playCell(int row, int col, int player){
 
+    qDebug() << "PlayCell";
     Cell *cell = cells[row][col];
 
     if(!cell->owner){
@@ -144,14 +145,20 @@ bool TicTacToeBoard::checkWon(int row, int col){
 
 bool TicTacToeBoard::operator !=(const TicTacToeBoard& board){
 
-    if(&this->cells != &board.cells)
-        return false;
-    if(this->col != board.col)
-        return false;
-    if(this->row != board.row)
-        return false;
-    if(this->winner != board.winner)
-        return false;
+    for(int i=0; i<3; i++){
+        for(int j=0; j<3; j++){
+            if(cells[i][j] != board.cells[i][j])
+                return true;
+        }
+    }
 
-    return true;
+
+    if(this->col != board.col)
+        return true;
+    if(this->row != board.row)
+        return true;
+    if(this->winner != board.winner)
+        return true;
+
+    return false;
 }
