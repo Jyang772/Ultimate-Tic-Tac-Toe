@@ -1,8 +1,6 @@
 #ifndef TICTACTOE_H
 #define TICTACTOE_H
 
-#include "montebot.h"
-
 #include <iostream>
 #include <vector>
 #include <QObject>
@@ -116,7 +114,7 @@ private:
     int rets[2] = {};
 
 
-    MonteBot montebot;
+    //MonteBot montebot;
 
     //std::vector<Cell> validMoves;
 

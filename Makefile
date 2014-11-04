@@ -48,34 +48,30 @@ OBJECTS_DIR   = ./
 SOURCES       = dialog.cpp \
 		main.cpp \
 		mainwindow.cpp \
-		tictactoe.cpp \
 		strategy.cpp \
-		board.cpp \
 		cell.cpp \
 		montebot.cpp \
 		game.cpp \
 		tictactoeboard.cpp \
 		randombot.cpp \
-		test.cpp moc_dialog.cpp \
+		tictactoe.cpp moc_dialog.cpp \
 		moc_mainwindow.cpp \
-		moc_tictactoe.cpp \
-		moc_test.cpp
+		moc_game.cpp \
+		moc_tictactoe.cpp
 OBJECTS       = dialog.o \
 		main.o \
 		mainwindow.o \
-		tictactoe.o \
 		strategy.o \
-		board.o \
 		cell.o \
 		montebot.o \
 		game.o \
 		tictactoeboard.o \
 		randombot.o \
-		test.o \
+		tictactoe.o \
 		moc_dialog.o \
 		moc_mainwindow.o \
-		moc_tictactoe.o \
-		moc_test.o
+		moc_game.o \
+		moc_tictactoe.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/shell-unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
@@ -326,7 +322,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/TTT1.0.0 || mkdir -p .tmp/TTT1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/TTT1.0.0/ && $(COPY_FILE) --parents dialog.h mainwindow.h tictactoe.h board.h cell.h montebot.h game.h tictactoeboard.h move.h randombot.h test.h .tmp/TTT1.0.0/ && $(COPY_FILE) --parents dialog.cpp main.cpp mainwindow.cpp tictactoe.cpp strategy.cpp board.cpp cell.cpp montebot.cpp game.cpp tictactoeboard.cpp randombot.cpp test.cpp .tmp/TTT1.0.0/ && $(COPY_FILE) --parents dialog.ui mainwindow.ui .tmp/TTT1.0.0/ && (cd `dirname .tmp/TTT1.0.0` && $(TAR) TTT1.0.0.tar TTT1.0.0 && $(COMPRESS) TTT1.0.0.tar) && $(MOVE) `dirname .tmp/TTT1.0.0`/TTT1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/TTT1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/TTT1.0.0/ && $(COPY_FILE) --parents dialog.h mainwindow.h cell.h montebot.h game.h tictactoeboard.h move.h randombot.h tictactoe.h .tmp/TTT1.0.0/ && $(COPY_FILE) --parents dialog.cpp main.cpp mainwindow.cpp strategy.cpp cell.cpp montebot.cpp game.cpp tictactoeboard.cpp randombot.cpp tictactoe.cpp .tmp/TTT1.0.0/ && $(COPY_FILE) --parents dialog.ui mainwindow.ui .tmp/TTT1.0.0/ && (cd `dirname .tmp/TTT1.0.0` && $(TAR) TTT1.0.0.tar TTT1.0.0 && $(COMPRESS) TTT1.0.0.tar) && $(MOVE) `dirname .tmp/TTT1.0.0`/TTT1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/TTT1.0.0
 
 
 clean:compiler_clean 
@@ -349,9 +345,9 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_dialog.cpp moc_mainwindow.cpp moc_tictactoe.cpp moc_test.cpp
+compiler_moc_header_make_all: moc_dialog.cpp moc_mainwindow.cpp moc_game.cpp moc_tictactoe.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_dialog.cpp moc_mainwindow.cpp moc_tictactoe.cpp moc_test.cpp
+	-$(DEL_FILE) moc_dialog.cpp moc_mainwindow.cpp moc_game.cpp moc_tictactoe.cpp
 moc_dialog.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		/usr/include/qt5/QtWidgets/qdialog.h \
 		/usr/include/qt5/QtWidgets/qwidget.h \
@@ -591,12 +587,12 @@ moc_mainwindow.cpp: dialog.h \
 		/usr/include/qt5/QtWidgets/qlabel.h \
 		/usr/include/qt5/QtWidgets/qframe.h \
 		tictactoe.h \
+		/usr/include/qt5/QtCore/QObject \
 		montebot.h \
 		move.h \
 		cell.h \
 		board.h \
 		tictactoeboard.h \
-		/usr/include/qt5/QtCore/QObject \
 		game.h \
 		randombot.h \
 		/usr/include/qt5/QtWidgets/QMainWindow \
@@ -738,8 +734,7 @@ moc_mainwindow.cpp: dialog.h \
 		mainwindow.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindow.h -o moc_mainwindow.cpp
 
-moc_tictactoe.cpp: montebot.h \
-		move.h \
+moc_game.cpp: move.h \
 		cell.h \
 		board.h \
 		tictactoeboard.h \
@@ -800,12 +795,10 @@ moc_tictactoe.cpp: montebot.h \
 		/usr/include/qt5/QtCore/qcontainerfwd.h \
 		/usr/include/qt5/QtCore/qisenum.h \
 		/usr/include/qt5/QtCore/qobject_impl.h \
-		game.h \
-		randombot.h \
-		tictactoe.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include tictactoe.h -o moc_tictactoe.cpp
+		game.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include game.h -o moc_game.cpp
 
-moc_test.cpp: /usr/include/qt5/QtCore/QObject \
+moc_tictactoe.cpp: /usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
 		/usr/include/qt5/QtCore/qnamespace.h \
@@ -862,8 +855,8 @@ moc_test.cpp: /usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qcontainerfwd.h \
 		/usr/include/qt5/QtCore/qisenum.h \
 		/usr/include/qt5/QtCore/qobject_impl.h \
-		test.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include test.h -o moc_test.cpp
+		tictactoe.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include tictactoe.h -o moc_tictactoe.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -1171,12 +1164,12 @@ main.o: main.cpp mainwindow.h \
 		/usr/include/qt5/QtWidgets/qlabel.h \
 		/usr/include/qt5/QtWidgets/qframe.h \
 		tictactoe.h \
+		/usr/include/qt5/QtCore/QObject \
 		montebot.h \
 		move.h \
 		cell.h \
 		board.h \
 		tictactoeboard.h \
-		/usr/include/qt5/QtCore/QObject \
 		game.h \
 		randombot.h \
 		/usr/include/qt5/QtWidgets/QMainWindow \
@@ -1442,12 +1435,12 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtWidgets/qlabel.h \
 		/usr/include/qt5/QtWidgets/qframe.h \
 		tictactoe.h \
+		/usr/include/qt5/QtCore/QObject \
 		montebot.h \
 		move.h \
 		cell.h \
 		board.h \
 		tictactoeboard.h \
-		/usr/include/qt5/QtCore/QObject \
 		game.h \
 		randombot.h \
 		/usr/include/qt5/QtWidgets/QMainWindow \
@@ -1623,100 +1616,8 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtWidgets/QWidget
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
 
-tictactoe.o: tictactoe.cpp tictactoe.h \
-		montebot.h \
-		move.h \
-		cell.h \
-		board.h \
-		tictactoeboard.h \
-		/usr/include/qt5/QtCore/QObject \
-		/usr/include/qt5/QtCore/qobject.h \
-		/usr/include/qt5/QtCore/qobjectdefs.h \
-		/usr/include/qt5/QtCore/qnamespace.h \
-		/usr/include/qt5/QtCore/qglobal.h \
-		/usr/include/qt5/QtCore/qconfig.h \
-		/usr/include/qt5/QtCore/qfeatures.h \
-		/usr/include/qt5/QtCore/qsystemdetection.h \
-		/usr/include/qt5/QtCore/qprocessordetection.h \
-		/usr/include/qt5/QtCore/qcompilerdetection.h \
-		/usr/include/qt5/QtCore/qglobalstatic.h \
-		/usr/include/qt5/QtCore/qatomic.h \
-		/usr/include/qt5/QtCore/qbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
-		/usr/include/qt5/QtCore/qgenericatomic.h \
-		/usr/include/qt5/QtCore/qatomic_msvc.h \
-		/usr/include/qt5/QtCore/qatomic_integrity.h \
-		/usr/include/qt5/QtCore/qoldbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_vxworks.h \
-		/usr/include/qt5/QtCore/qatomic_power.h \
-		/usr/include/qt5/QtCore/qatomic_alpha.h \
-		/usr/include/qt5/QtCore/qatomic_armv7.h \
-		/usr/include/qt5/QtCore/qatomic_armv6.h \
-		/usr/include/qt5/QtCore/qatomic_armv5.h \
-		/usr/include/qt5/QtCore/qatomic_bfin.h \
-		/usr/include/qt5/QtCore/qatomic_ia64.h \
-		/usr/include/qt5/QtCore/qatomic_mips.h \
-		/usr/include/qt5/QtCore/qatomic_s390.h \
-		/usr/include/qt5/QtCore/qatomic_sh4a.h \
-		/usr/include/qt5/QtCore/qatomic_sparc.h \
-		/usr/include/qt5/QtCore/qatomic_gcc.h \
-		/usr/include/qt5/QtCore/qatomic_x86.h \
-		/usr/include/qt5/QtCore/qatomic_cxx11.h \
-		/usr/include/qt5/QtCore/qatomic_unix.h \
-		/usr/include/qt5/QtCore/qmutex.h \
-		/usr/include/qt5/QtCore/qlogging.h \
-		/usr/include/qt5/QtCore/qflags.h \
-		/usr/include/qt5/QtCore/qtypeinfo.h \
-		/usr/include/qt5/QtCore/qtypetraits.h \
-		/usr/include/qt5/QtCore/qsysinfo.h \
-		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
-		/usr/include/qt5/QtCore/qstring.h \
-		/usr/include/qt5/QtCore/qchar.h \
-		/usr/include/qt5/QtCore/qbytearray.h \
-		/usr/include/qt5/QtCore/qrefcount.h \
-		/usr/include/qt5/QtCore/qarraydata.h \
-		/usr/include/qt5/QtCore/qstringbuilder.h \
-		/usr/include/qt5/QtCore/qlist.h \
-		/usr/include/qt5/QtCore/qalgorithms.h \
-		/usr/include/qt5/QtCore/qiterator.h \
-		/usr/include/qt5/QtCore/qcoreevent.h \
-		/usr/include/qt5/QtCore/qscopedpointer.h \
-		/usr/include/qt5/QtCore/qmetatype.h \
-		/usr/include/qt5/QtCore/qvarlengtharray.h \
-		/usr/include/qt5/QtCore/qcontainerfwd.h \
-		/usr/include/qt5/QtCore/qisenum.h \
-		/usr/include/qt5/QtCore/qobject_impl.h \
-		game.h \
-		randombot.h \
-		/usr/include/qt5/QtCore/QTextStream \
-		/usr/include/qt5/QtCore/qtextstream.h \
-		/usr/include/qt5/QtCore/qiodevice.h \
-		/usr/include/qt5/QtCore/qlocale.h \
-		/usr/include/qt5/QtCore/qvariant.h \
-		/usr/include/qt5/QtCore/qmap.h \
-		/usr/include/qt5/QtCore/qpair.h \
-		/usr/include/qt5/QtCore/qdebug.h \
-		/usr/include/qt5/QtCore/qhash.h \
-		/usr/include/qt5/QtCore/qvector.h \
-		/usr/include/qt5/QtCore/qpoint.h \
-		/usr/include/qt5/QtCore/qset.h \
-		/usr/include/qt5/QtCore/qcontiguouscache.h \
-		/usr/include/qt5/QtCore/qstringlist.h \
-		/usr/include/qt5/QtCore/qdatastream.h \
-		/usr/include/qt5/QtCore/qregexp.h \
-		/usr/include/qt5/QtCore/qstringmatcher.h \
-		/usr/include/qt5/QtCore/qshareddata.h \
-		/usr/include/qt5/QtCore/QProcess \
-		/usr/include/qt5/QtCore/qprocess.h \
-		/usr/include/qt5/QtCore/QDebug
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tictactoe.o tictactoe.cpp
-
 strategy.o: strategy.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o strategy.o strategy.cpp
-
-board.o: board.cpp board.h \
-		cell.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o board.o board.cpp
 
 cell.o: cell.cpp cell.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cell.o cell.cpp
@@ -1726,6 +1627,7 @@ montebot.o: montebot.cpp montebot.h \
 		cell.h \
 		board.h \
 		tictactoeboard.h \
+		game.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -1783,7 +1685,6 @@ montebot.o: montebot.cpp montebot.h \
 		/usr/include/qt5/QtCore/qcontainerfwd.h \
 		/usr/include/qt5/QtCore/qisenum.h \
 		/usr/include/qt5/QtCore/qobject_impl.h \
-		game.h \
 		randombot.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o montebot.o montebot.cpp
 
@@ -1853,64 +1754,7 @@ game.o: game.cpp game.h \
 
 tictactoeboard.o: tictactoeboard.cpp tictactoeboard.h \
 		cell.h \
-		board.h \
-		/usr/include/qt5/QtCore/QObject \
-		/usr/include/qt5/QtCore/qobject.h \
-		/usr/include/qt5/QtCore/qobjectdefs.h \
-		/usr/include/qt5/QtCore/qnamespace.h \
-		/usr/include/qt5/QtCore/qglobal.h \
-		/usr/include/qt5/QtCore/qconfig.h \
-		/usr/include/qt5/QtCore/qfeatures.h \
-		/usr/include/qt5/QtCore/qsystemdetection.h \
-		/usr/include/qt5/QtCore/qprocessordetection.h \
-		/usr/include/qt5/QtCore/qcompilerdetection.h \
-		/usr/include/qt5/QtCore/qglobalstatic.h \
-		/usr/include/qt5/QtCore/qatomic.h \
-		/usr/include/qt5/QtCore/qbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
-		/usr/include/qt5/QtCore/qgenericatomic.h \
-		/usr/include/qt5/QtCore/qatomic_msvc.h \
-		/usr/include/qt5/QtCore/qatomic_integrity.h \
-		/usr/include/qt5/QtCore/qoldbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_vxworks.h \
-		/usr/include/qt5/QtCore/qatomic_power.h \
-		/usr/include/qt5/QtCore/qatomic_alpha.h \
-		/usr/include/qt5/QtCore/qatomic_armv7.h \
-		/usr/include/qt5/QtCore/qatomic_armv6.h \
-		/usr/include/qt5/QtCore/qatomic_armv5.h \
-		/usr/include/qt5/QtCore/qatomic_bfin.h \
-		/usr/include/qt5/QtCore/qatomic_ia64.h \
-		/usr/include/qt5/QtCore/qatomic_mips.h \
-		/usr/include/qt5/QtCore/qatomic_s390.h \
-		/usr/include/qt5/QtCore/qatomic_sh4a.h \
-		/usr/include/qt5/QtCore/qatomic_sparc.h \
-		/usr/include/qt5/QtCore/qatomic_gcc.h \
-		/usr/include/qt5/QtCore/qatomic_x86.h \
-		/usr/include/qt5/QtCore/qatomic_cxx11.h \
-		/usr/include/qt5/QtCore/qatomic_unix.h \
-		/usr/include/qt5/QtCore/qmutex.h \
-		/usr/include/qt5/QtCore/qlogging.h \
-		/usr/include/qt5/QtCore/qflags.h \
-		/usr/include/qt5/QtCore/qtypeinfo.h \
-		/usr/include/qt5/QtCore/qtypetraits.h \
-		/usr/include/qt5/QtCore/qsysinfo.h \
-		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
-		/usr/include/qt5/QtCore/qstring.h \
-		/usr/include/qt5/QtCore/qchar.h \
-		/usr/include/qt5/QtCore/qbytearray.h \
-		/usr/include/qt5/QtCore/qrefcount.h \
-		/usr/include/qt5/QtCore/qarraydata.h \
-		/usr/include/qt5/QtCore/qstringbuilder.h \
-		/usr/include/qt5/QtCore/qlist.h \
-		/usr/include/qt5/QtCore/qalgorithms.h \
-		/usr/include/qt5/QtCore/qiterator.h \
-		/usr/include/qt5/QtCore/qcoreevent.h \
-		/usr/include/qt5/QtCore/qscopedpointer.h \
-		/usr/include/qt5/QtCore/qmetatype.h \
-		/usr/include/qt5/QtCore/qvarlengtharray.h \
-		/usr/include/qt5/QtCore/qcontainerfwd.h \
-		/usr/include/qt5/QtCore/qisenum.h \
-		/usr/include/qt5/QtCore/qobject_impl.h
+		board.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tictactoeboard.o tictactoeboard.cpp
 
 randombot.o: randombot.cpp randombot.h \
@@ -1978,7 +1822,7 @@ randombot.o: randombot.cpp randombot.h \
 		/usr/include/qt5/QtCore/qobject_impl.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o randombot.o randombot.cpp
 
-test.o: test.cpp test.h \
+tictactoe.o: tictactoe.cpp tictactoe.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/qobject.h \
 		/usr/include/qt5/QtCore/qobjectdefs.h \
@@ -2035,8 +1879,29 @@ test.o: test.cpp test.h \
 		/usr/include/qt5/QtCore/qvarlengtharray.h \
 		/usr/include/qt5/QtCore/qcontainerfwd.h \
 		/usr/include/qt5/QtCore/qisenum.h \
-		/usr/include/qt5/QtCore/qobject_impl.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o test.o test.cpp
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/QTextStream \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/QProcess \
+		/usr/include/qt5/QtCore/qprocess.h \
+		/usr/include/qt5/QtCore/QDebug
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tictactoe.o tictactoe.cpp
 
 moc_dialog.o: moc_dialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_dialog.o moc_dialog.cpp
@@ -2044,11 +1909,11 @@ moc_dialog.o: moc_dialog.cpp
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
 
+moc_game.o: moc_game.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_game.o moc_game.cpp
+
 moc_tictactoe.o: moc_tictactoe.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_tictactoe.o moc_tictactoe.cpp
-
-moc_test.o: moc_test.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_test.o moc_test.cpp
 
 ####### Install
 

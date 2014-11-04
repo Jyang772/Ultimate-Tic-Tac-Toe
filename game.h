@@ -5,12 +5,17 @@
 #include "cell.h"
 #include "board.h"
 #include "tictactoeboard.h"
+
 #include <vector>
 #include <array>
+#include <QObject>
 
 
-class Game
+class Game : public QObject
 {
+
+    Q_OBJECT
+
 public:
     Game();
     void playCellSilently(int board_row,int board_col,int cell_row,int cell_col);

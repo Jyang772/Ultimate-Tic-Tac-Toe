@@ -4,14 +4,11 @@
 #include "cell.h"
 #include "board.h"
 
-#include <QObject>
 #include <vector>
 
 
 class TicTacToeBoard
 {
-signals:
-    void highlight(int row, int col);
 
 public:
     TicTacToeBoard(){}

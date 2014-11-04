@@ -22,13 +22,14 @@ struct Clone{
     int ties;
 };
 
+
 class MonteBot
 {
 public:
     MonteBot();
-    void Play(Game);
-    void StartCalculation(Game);
-    void CalculateAhead(Game);
+    void Play(Game&);
+    void StartCalculation(Game&);
+    void CalculateAhead(Game&);
 
 
     int endThinkTime;

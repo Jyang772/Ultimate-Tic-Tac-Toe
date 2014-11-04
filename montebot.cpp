@@ -5,7 +5,7 @@ MonteBot::MonteBot()
 }
 
 
-void MonteBot::StartCalculation(Game game){
+void MonteBot::StartCalculation(Game &game){
     Move move;
     std::vector<Move> validMoves = game.getValidMoves();
 
@@ -23,26 +23,27 @@ void MonteBot::StartCalculation(Game game){
         clone_.boardCol = move.bCol;
         clone_.cellRow = move.cRow;
         clone_.cellCol = move.cCol;
-        clone_.clone = clone;
+        //clone_.clone = clone;
         clone_.wins = 0;
         clone_.weightedWins = 0;
         clone_.losses = 0;
         clone_.weightedLosses = 0;
         clone_.ties = 0;
 
-        clones.push_back(clone_);
+        //clones.push_back(clone_);
     }
 
 }
 
 
-void MonteBot::CalculateAhead(Game game){
+void MonteBot::CalculateAhead(Game &game){
 
     randomBot random;
 
     for(int i=0; i<clones.size(); i++){
         Clone move = clones[i];
-        Game simGame = Game(move.clone);
+        //Game simGame = Game(move.clone);
+        Game simGame;
 
         int winner = random.playOutHidden(simGame);
         int weight = 1;
@@ -70,25 +71,25 @@ void MonteBot::CalculateAhead(Game game){
     }
 }
 
-void MonteBot::Play(Game game){
+void MonteBot::Play(Game &game){
 
-    int bestScore = -10000;
-    Clone bestMove;
+//    int bestScore = -10000;
+//    Clone bestMove;
 
-    for(int i=0; i<clones.size(); i++){
-        int penalty = 1;
-        Clone clone = clones[i];
+//    for(int i=0; i<clones.size(); i++){
+//        int penalty = 1;
+//        Clone clone = clones[i];
 
-        if(!clone.clone.currentBoard_valid){
-            penalty = monteChoicePenalty;
-        }
-        int score = (clone.weightedWins - clone.weightedLosses*penalty) / (clone.wins + clone.losses + clone.ties);
+//        if(!clone.clone.currentBoard_valid){
+//            penalty = monteChoicePenalty;
+//        }
+//        int score = (clone.weightedWins - clone.weightedLosses*penalty) / (clone.wins + clone.losses + clone.ties);
 
-        if(score > bestScore){
-            bestScore = score;
-            bestMove = clone;
-        }
-    }
+//        if(score > bestScore){
+//            bestScore = score;
+//            bestMove = clone;
+//        }
+//    }
 
     //Play Cell at bestMove.boardRow , etc.
 }
