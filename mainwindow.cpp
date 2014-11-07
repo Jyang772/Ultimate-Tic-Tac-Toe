@@ -22,8 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     connect(options,SIGNAL(choosen(int)),this,SLOT(begin(int)));
-    //connect(game,SIGNAL(humanMoves()),this,SLOT(humanMoves()));
-    //connect(game,SIGNAL(computerMove(int,int)),this,SLOT(computerMove(int,int)));
     connect(game,SIGNAL(prediction(QString)),this,SLOT(prediction(QString)));
 
 
@@ -41,8 +39,6 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::setUpGrid(){
-
-
 
 
     frames[0] = ui->gridFrame;
@@ -214,6 +210,9 @@ void MainWindow::computerMove(int board_row, int board_col, int cell_row, int ce
     itemButtons[grid][slot]->setText(QString(QChar('O')));
     itemButtons[grid][slot]->setStyleSheet("background-color: yellow");
 
+
+    colorBoard(grid,slot);
+
 }
 
 void MainWindow::CheckWinner(int grid){
@@ -266,11 +265,6 @@ void MainWindow::CheckWinner(int grid){
 
 }
 
-void MainWindow::invalidMove(){
-    ui->announce->setText("Invalid move! Try again.");
-    qDebug() << "currentGrid: " << currentGrid;
-    qDebug() << "nextGrid: " << nextGrid;
-}
 
 void MainWindow::on_playAgain_clicked()
 {
@@ -406,6 +400,7 @@ void MainWindow::computerMoves(){
 
     montebot.botThinkingTime = 2000;
 
+
     montebot.startCalculation(newgame);
     qDebug() << "Finished computer move";
 
@@ -417,6 +412,8 @@ void MainWindow::computerMoves(){
     montebot.play(newgame);
     qDebug() << "DONE";
 
+
+    //Highlight
     humanMoves();
 
 }

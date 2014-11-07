@@ -124,6 +124,9 @@ bool Game::playCell(int board_row, int board_col, int cell_row, int cell_col){
             this->winner = this->currentPlayer;
             //Show winning screen
             //return;
+
+
+
             transit->computerMove(board_row,board_col,cell_row,cell_col);
 
             return true;
@@ -149,6 +152,7 @@ bool Game::playCell(int board_row, int board_col, int cell_row, int cell_col){
     }
     else{
         //this->currentBoard->hightlight;
+        qDebug() << "WON BOARD!!";
     }
 
     if(this->currentPlayer == -1){

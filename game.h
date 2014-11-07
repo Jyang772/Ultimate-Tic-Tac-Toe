@@ -5,7 +5,7 @@
 #include "tictactoeboard.h"
 #include "transmitter.h"
 
-
+#include <QDebug>
 #include <vector>
 #include <iostream>
 

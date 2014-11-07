@@ -59,8 +59,6 @@ public slots:
 private slots:
 
     void begin(int strength);
-
-    void invalidMove();
     void computerMove(int board_row, int board_col, int cell_row, int cell_col);
 
 
