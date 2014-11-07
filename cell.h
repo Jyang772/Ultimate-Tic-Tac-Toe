@@ -3,17 +3,22 @@
 
 class Cell{
 public:
-    Cell(int row, int col);
-    void playCell(int owner);
-    bool operator!=(const Cell& other);
+  Cell();
+  Cell(int row, int col);
+  Cell(const Cell& other);
 
-    Cell clone();
+  bool operator==(const Cell&) const;
+  bool operator!=(const Cell&) const;
 
+  const Cell& clone();
 
-    int row;
-    int col;
-    int owner = 0;
-    int winner = 0;
+  void setWinner(int winner);
+  void playCell(int newOwner);
+  int row = -1;
+  int col = -1;
+  int owner = 0;
+  int winner = 0;
 };
+
 
 #endif // CELL_H

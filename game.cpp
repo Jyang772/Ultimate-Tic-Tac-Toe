@@ -1,269 +1,326 @@
 #include "game.h"
-#include <QDebug>
-#include <iostream>
 
 Game::Game()
 {
-    //transit->displayMessage("HELLO");
 
-    currentBoard_valid = 0;
-    currentBoard = nullptr;
-    currentPlayer = -1;
-    finished = false;
-    winner = 0;
-    countFilled = 0;
+    this->currentPlayer = 1;
+    this->currentBoard = nullptr;
+    this->finished = false;
+    this->winner = 0;
+    this->countFilled = 0;
 
-
-    for(int row=0; row<3; row++){
-        for(int col=0; col<3; col++){
-
-            TicTacToeBoard temp(row,col);
-            boards[row][col] = temp;
+    for(int i=0; i<3; i++){
+        for(int j=0; j<3; j++){
+            this->boards[i][j] = new TicTacToeBoard(i,j);
         }
     }
-
-
 }
 
+Game::Game(const Game& other){
+  this->currentPlayer = other.currentPlayer;
+  this->finished = other.finished;
+  this->winner = other.winner;
+  this->countFilled = other.countFilled;
 
-Game::Game(Game &other){
-
-    currentBoard = other.currentBoard;
-    //currentBoard_valid = other.currentBoard_valid;
-    currentPlayer = other.currentPlayer;
-    finished = other.finished;
-    winner = other.winner;
-    countFilled = other.countFilled;
-
-    for(int row=0; row<3; row++){
-        for(int col=0; col<3; col++){
-            boards[row][col] = other.boards[row][col].clone();
-        }
+  for(int i=0; i<3; i++){
+    for(int j=0; j<3; j++){
+      this->boards[i][j] = new TicTacToeBoard(i,j);
     }
+  }
 
-    if(other.currentBoard){
-        *currentBoard = boards[other.currentBoard->row][other.currentBoard->col];
+  for(int i=0; i<3; i++){
+    for(int j=0; j<3; j++){
+      //Receiving copy
+      *this->boards[i][j] = other.boards[i][j]->clone();
     }
+  }
 
+  this->currentBoard = nullptr;
+
+  if(other.currentBoard){
+    // currentBoard = new TicTacToeBoard(0,0);
+
+    //this->currentBoard = this->boards[other.currentBoard->row][other.currentBoard->col];
+    this->currentBoard = boards[other.currentBoard->row][other.currentBoard->col];
+  }
 }
 
-bool Game::checkWonGame(int row, int col, bool silent){
-
-    int player = boards[row][col].winner;
-
-    int i=0;
-    while(i<3 && (boards[row][i].winner) && (boards[row][i].winner == player)){
-        i += 1;
-    }
-    if(i == 3){
-        return true;
-    }
-
-    //check for ultimate win by col
-    i=0;
-    while(i<3 && (boards[i][col].winner) && (boards[i][col].winner == player)){
-        i += 1;
-    }
-    if(i == 3){
-        return true;
-    }
-
-    //check for upper left to lower right diagonal
-    i=0;
-    while(i<3 && (boards[i][i].winner) && (boards[i][i].winner == player)){
-        i += 1;
-    }
-    if(i == 3){
-        return true;
-    }
-
-    //check for upper right to lower left diagonal
-    i=0;
-    while(i<3 && (boards[row][2-i].winner) && (boards[row][2-i].winner == player)){
-        i += 1;
-    }
-    if(i == 3)
-        return true;
-
-
-    //None of the rows, cols, diagonals are winning
-    return false;
-}
 
 void Game::playCellSilently(int board_row, int board_col, int cell_row, int cell_col){
 
-    TicTacToeBoard &board = boards[board_row][board_col];
+    TicTacToeBoard *board = this->boards[board_row][board_col];
     //Cell cell = *board.cells[cell_row][cell_col];
+    bool justWon = board->playCellSilently(cell_row, cell_col, this->currentPlayer);
 
-    bool justWon = board.playCellSilently(cell_col,cell_col,currentPlayer);
-
-    countFilled += 1;
+    this->countFilled += 1;
 
     if(justWon){
-        if(checkWonGame(board_row,board_col,true)){
-            finished = true;
-            winner = currentPlayer;
-            //            qDebug() << "winner: " << currentPlayer;
-            //            qDebug() << "game.finished: " << finished;
+        if(this->checkWonGame(board_row, board_col,true)){
+            this->finished = true;
+            this->winner = this->currentPlayer;
             return;
         }
     }
 
-    currentBoard = &boards[cell_row][cell_col];
-    if(currentBoard->isFull()){
-        qDebug() << "currentBoard is full";
-        currentBoard = NULL;
-    }
-    else if(currentBoard->winner && useRule5b){
-        currentBoard = NULL;
+    this->currentBoard = this->boards[cell_row][cell_col];
+
+    if(this->currentBoard->isFull()){
+        this->currentBoard = nullptr;
     }
 
-    //Check for Draws
-    if(countFilled == 81){
-        finished = true;
+    else if(this->currentBoard->winner && useRule5b){
+        this->currentBoard = nullptr;
     }
-    else if(useRule5b && !getNonFinishedBoards().size()){
-        finished = true;
+
+    //check for draws
+    if(this->countFilled == 81){
+        this->finished = true;
         return;
     }
 
-    //X == -1 , O == 1
-    if(currentPlayer == -1){
-        currentPlayer = 1;
+    else if(useRule5b && !this->getNonFinishedBoards().size()){
+        this->finished = true;
+        return;
+    }
+
+    if(this->currentPlayer == -1){
+      this->currentPlayer = 1;
     }
     else{
-        currentPlayer = -1;
+      this->currentPlayer = -1;
     }
 }
 
+bool Game::playCell(int board_row, int board_col, int cell_row, int cell_col){
 
+    TicTacToeBoard *board = this->boards[board_row][board_col];
+    if(this->currentBoard && board != this->currentBoard){
+        //ERROR WRONG BOARD
+      std::cout <<"Assertion: wrong board. Exptected " << this->currentBoard <<  " but got " << board << std::endl;
+      //std::exit(1);
+      //return;
+      return false;
+    }
+
+    Cell& cell = board->cells[cell_row][cell_col];
+
+    if(cell.owner){
+      std::cout << "Error: Cell already has owner" << std::endl;
+      std::exit(1);
+      //return;
+      return false;
+    }
+
+    bool justWon = board->playCell(cell_row,cell_col,this->currentPlayer);
+
+    this->countFilled += 1;
+    if(this->currentBoard){
+        //unhiglight
+    }
+
+    if(justWon){
+        if(this->checkWonGame(board_row,board_col,true)){
+            this->finished = true;
+            this->winner = this->currentPlayer;
+            //Show winning screen
+            //return;
+            transit->computerMove(board_row,board_col,cell_row,cell_col);
+
+            return true;
+        }
+    }
+
+    this->currentBoard = this->boards[cell_row][cell_col];
+
+    if(this->currentBoard->isFull()){
+        this->currentBoard = nullptr;
+        if(this->countFilled == 81){
+            this->finished = true;
+            //Show draw screen
+        }
+    }
+    else if(this->currentBoard->winner && useRule5b){
+        if(!this->getNonFinishedBoards().size()){
+            this->finished = true;
+            //show draw screen
+        }
+
+        this->currentBoard = nullptr;
+    }
+    else{
+        //this->currentBoard->hightlight;
+    }
+
+    if(this->currentPlayer == -1){
+        currentPlayer = 1;
+        std::cout << "Board Row -1: " << board_row << std::endl;
+        std::cout << "Board Col -1: " << board_col << std::endl;
+        std::cout << "Cell Row -1: " << cell_row << std::endl;
+        std::cout << "Cell Col -1: " << cell_col << std::endl;
+
+    }
+    else{
+        this->currentPlayer = -1;
+
+        std::cout << "Board Row: " << board_row << std::endl;
+        std::cout << "Board Col: " << board_col << std::endl;
+        std::cout << "Cell Row: " << cell_row << std::endl;
+        std::cout << "Cell Col: " << cell_col << std::endl;
+        transit->computerMove(board_row,board_col,cell_row,cell_col);
+
+    }
+
+
+    return true;
+}
+
+std::vector<Move> Game::getValidMoves(){
+    std::vector<TicTacToeBoard> validBoards;
+
+    if(this->currentBoard){
+        validBoards.push_back(*this->currentBoard);
+    }
+    else{
+        if(useRule5b){
+            validBoards = this->getNonFinishedBoards();
+        }
+    }
+
+    std::vector<Move> validMoves;
+
+    for(unsigned int i=0; i<validBoards.size(); i++){
+        TicTacToeBoard board = validBoards[i];
+        std::vector<Cell> validCells = board.getEmptyCells();
+
+        for(unsigned int j=0; j<validCells.size();j++){
+            Cell cell = validCells[j];
+            validMoves.push_back(Move(board.row,board.col,cell.row,cell.col));
+        }
+    }
+
+    return validMoves;
+}
 
 std::vector<TicTacToeBoard> Game::getNonFinishedBoards(){
-
     std::vector<TicTacToeBoard> nonFinishedBoards;
 
     for(int i=0; i<3; i++){
         for(int j=0; j<3; j++){
-            TicTacToeBoard board = boards[i][j];
+            TicTacToeBoard board = *this->boards[i][j];
             if(!board.winner && !board.isFull()){
                 nonFinishedBoards.push_back(board);
             }
         }
     }
+
     return nonFinishedBoards;
 }
 
-std::vector<Move> Game::getValidMoves(){
+bool Game::checkWonGame(int board_row, int board_col, bool silent){
 
-
-    std::vector<TicTacToeBoard> validBoards;
-
-    if(currentBoard){
-
-        validBoards.push_back(*currentBoard);
+    /* check if the move at row, col won the board */
+    int player = this->boards[board_row][board_col]->winner;
+    //check the row
+    int i=0;
+    while(i<3 &&
+          this->boards[board_row][i]->winner &&
+          this->boards[board_row][i]->winner== player) {
+        i += 1;
     }
-    else{
-        //Choose random Board
-        if(useRule5b){
-            validBoards = getNonFinishedBoards();
+    if(i == 3){
+        if(!silent) {
+            for(i=0; i<3; i++) {
+                //this->boards[row][i]->highlight();
+            }
         }
+        return true;
     }
 
-    std::vector<Move> validMoves;
-    //qDebug() << "Game::getValidMoves()";
-    //qDebug() << "validBoards.size(): " << validBoards.size();
-
-    for(int i=0; i<validBoards.size(); i++){
-        TicTacToeBoard board = validBoards[i];
-        std::vector<Cell> validCells;
-        //This function should return a vector instead. It's much easier to understand.
-        board.getEmptyCells(validCells);
-
-        for(int j=0; j<validCells.size(); j++){
-            Cell cell = validCells[j];
-
-            Move move(board.row,board.col,cell.row,cell.col);
-            validMoves.push_back(move);
+    //check the col
+    i=0;
+    while(i<3 &&
+          this->boards[i][board_col]->winner &&
+          this->boards[i][board_col]->winner == player) {
+        i += 1;
+    }
+    if(i == 3){
+        if(!silent) {
+            for(i=0; i<3; i++) {
+                //this->boards[i][col].highlight();
+            }
         }
+        return true;
     }
 
-    //qDebug() << "Returning from Game::getValidMoves()";
+    //check the upper left to lower right diagnol
+    i=0;
+    while(i<3 &&
+          this->boards[i][i]->winner &&
+          this->boards[i][i]->winner == player) {
+        i += 1;
+    }
+    if(i == 3){
+        if(!silent) {
+            for(i=0; i<3; i++) {
+                //this.boards[i][i].highlight();
+            }
+        }
+        return true;
+    }
 
-    return validMoves;
+    //check the uper right to lower left diagnol
+    i=0;
+    while(i<3 &&
+          this->boards[i][2-i]->winner &&
+          this->boards[i][2-i]->winner == player) {
+        i += 1;
+    }
+    if(i == 3){
+        if(!silent) {
+            for(i=0; i<3; i++) {
+                //this.boards[i][2-i].highlight();
+            }
+        }
+        return true;
+    }
+    //None of the rows, cols, or diagnols were winning
+    return false;
 }
 
-bool Game::PlayCell(int board_row, int board_col, int cell_row, int cell_col){
-    qDebug() << "Game::PlayCell";
-    //qDebug() << "CurrentPlayer: " << currentPlayer;
-    //qDebug() << "board_row: " << board_row;
 
-    TicTacToeBoard &board = boards[board_row][board_col];
+std::string Game::getBoardDraw() const {
 
-    if(currentBoard && board != *currentBoard){
-        qDebug() << "INVALID MOVE";
-        return false;
-    }
+  std::string result;
 
-    qDebug() << "Cell_row: " << cell_row;
-    qDebug() << "Cell_col: " << cell_col;
-    Cell *cell = board.cells[cell_row][cell_col];
+  for(int br=0; br < 3; br++){ // Iterating board rows
+    for(int cr=0; cr < 3; cr++){ // Iterating col rows
+      for(int bc=0; bc < 3; bc++){ // Iterating board columns
+        for(int cc=0; cc < 3; cc++){ // Iterating col columns
+          std::string out("-");
 
-    if(cell->owner){
-        qDebug() << "OI";
-        return false;
-    }
+          if(this->boards[br][bc]->winner > 0){
+            result.append("\033[1;31m");
+          }
+          else if(this->boards[br][bc]->winner < 0) {
+            result.append("\033[1;32m");
+          }
+          else{
+            result.append("\033[0m");
+          }
 
-    bool justWon = board.playCell(cell_row, cell_col, currentPlayer);
+          Cell cell = this->boards[br][bc]->cells[cr][cc];
+          if(cell.owner){
 
-    qDebug() << "test";
-    transit->highlight(board_row,board_col,cell_row,cell_col);
-
-    countFilled += 1;
-    if(currentBoard_valid){
-        //unhighlight. Remove stylesheet
-    }
-
-    if(justWon){
-        if(checkWonGame(board_row,board_col,true)){
-            finished = true;
-            winner = currentPlayer;
-            //Show winning screen
-            return true;
+            out = cell.owner > 0 ? "X" : "O";
+          }
+          result.append(out);
         }
+        result.append(" ");
+      }
+      result.append("\n");
     }
-
-    currentBoard = &boards[cell_row][cell_col];
-    if(currentBoard->isFull()){
-        currentBoard_valid = 0;
-        if(countFilled = 81){
-            finished = true;
-            //DRAW!!
-        }
-        else if( currentBoard->winner && useRule5b){
-            if(!getNonFinishedBoards().size()){
-                finished = true;
-                //DRAW!!!
-            }
-            currentBoard_valid = 0;
-        }
-        else{
-            //highlight currentBoard. Stylesheet
-        }
-    }
-    if(currentPlayer == -1){
-        transit->computerMove(board_row,board_col, cell_row, cell_col);
-        currentPlayer = 1;
-
-        qDebug() << "CurrentBoard: ";
-        qDebug() << "CurrentBoard.row: " << currentBoard->row;
-        qDebug() << "CurrentBoard.col: " << currentBoard->col;
-    }
-    else{
-        currentPlayer = -1;
-        qDebug() << "CurrentBoard.row: " << currentBoard->row;
-        qDebug() << "CurrentBoard.col: " << currentBoard->col;
-    }
-
-    qDebug() << "Returning from Game::PlayCell";
-
+    result.append("\n");
+  }
+  result.append("\033[0m");
+  return result;
 }

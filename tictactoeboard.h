@@ -2,41 +2,28 @@
 #define TICTACTOEBOARD_H
 
 #include "cell.h"
-#include "transmitter.h"
-
-#include <QObject>
 #include <vector>
 
-
-class TicTacToeBoard
-{
-signals:
-    void highlight(int row, int col);
-
+class TicTacToeBoard{ // I think here are the main problem
 public:
-    TicTacToeBoard(){}
     TicTacToeBoard(int row, int col);
-    TicTacToeBoard clone();
+    TicTacToeBoard(const TicTacToeBoard& other);
 
+    bool operator!=(const TicTacToeBoard& other);
 
+    TicTacToeBoard& clone();
     bool isFull();
-    bool checkWon(int row, int col);
-    void getEmptyCells(std::vector<Cell> &validCells);
-    bool playCell(int row, int col, int player);
+
+    std::vector<Cell> getEmptyCells();
     bool playCellSilently(int row, int col, int player);
-
-    void highlight_(int row, int col);
-
-    bool operator!=(const TicTacToeBoard&);
+    bool playCell(int row, int col, int player);
+    bool checkWon(int row, int col);
 
     int row;
     int col;
-    int winner = 0;
-    int currentBoard_valid = 0;
+    int winner;
 
-    Cell *cells[3][3];
-
-    Transmitter *transit = new Transmitter();
+    Cell cells[3][3];
 };
 
 #endif // TICTACTOEBOARD_H

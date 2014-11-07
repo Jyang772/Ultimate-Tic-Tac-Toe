@@ -159,7 +159,7 @@ int MainWindow::itemClicked(){
 
 
 
-    if(!newgame.PlayCell(board_row,board_col,cell_row,cell_col))
+    if(!newgame.playCell(board_row,board_col,cell_row,cell_col))
         qDebug() << "PLAYER, INVALID MOVE";
     else{
         clickedItem->setText(QString(QChar('X')));
@@ -404,17 +404,17 @@ void MainWindow::computerMoves(){
     QTime myTimer;
     myTimer.start();
 
-    montebot.botThinkingTime = 1000;
+    montebot.botThinkingTime = 2000;
 
-    montebot.StartCalculation(newgame);
+    montebot.startCalculation(newgame);
     qDebug() << "Finished computer move";
 
     while(myTimer.elapsed() < montebot.botThinkingTime){
-        montebot.CalculateAhead(newgame);
+        montebot.calculateAhead(newgame);
     }
 
     qDebug() << "BOT PLAYS";
-    montebot.Play(newgame);
+    montebot.play(newgame);
     qDebug() << "DONE";
 
     humanMoves();

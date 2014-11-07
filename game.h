@@ -2,42 +2,41 @@
 #define GAME_H
 
 #include "move.h"
-#include "cell.h"
 #include "tictactoeboard.h"
 #include "transmitter.h"
+
+
 #include <vector>
-#include <array>
+#include <iostream>
 
-
-class Game
-{
+class Game{
 public:
     Game();
-    Game(Game&);
-    void playCellSilently(int board_row,int board_col,int cell_row,int cell_col);
-    bool checkWonGame(int row, int col, bool silent);
-    std::vector<TicTacToeBoard> getNonFinishedBoards();
+    Game(const Game& other);
+
+    void playCellSilently(int board_row, int board_col, int cell_row, int cell_col);
+    bool playCell(int board_row, int board_col, int cell_row, int cell_col);
+
     std::vector<Move> getValidMoves();
+    std::vector<TicTacToeBoard> getNonFinishedBoards();
+    bool checkWonGame(int board_row, int board_col, bool silent);
 
-    bool PlayCell(int board_row, int board_col, int cell_row, int cell_col);
 
+    std::string getBoardDraw() const;
 
-    bool useRule5b = true;
-    int currentPlayer = -1;
-    TicTacToeBoard *currentBoard;
-    bool finished = false;
+    int currentPlayer;
+    bool finished;
     int winner = 0;
-    int countFilled = 0;
+    int countFilled;
+    bool useRule5b = true;
+    TicTacToeBoard *currentBoard; //Pointer to currentBoard
+    TicTacToeBoard *boards[3][3];
 
-    //For setting currentboard to null.
-    int currentBoard_valid;
+    Transmitter *transit = new Transmitter;
 
-    //std::array<std::vector<TicTacToeBoard>,3> boards;
-    TicTacToeBoard boards[3][3];
-
-
-    Transmitter *transit = new Transmitter();
 
 };
+
+
 
 #endif // GAME_H
