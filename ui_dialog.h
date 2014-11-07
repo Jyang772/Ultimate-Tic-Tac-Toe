@@ -13,6 +13,7 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
@@ -30,12 +31,14 @@ public:
     QPushButton *chooseY;
     QLineEdit *lineEdit;
     QLabel *label;
+    QCheckBox *checkBox;
+    QCheckBox *checkBox_2;
 
     void setupUi(QDialog *Dialog)
     {
         if (Dialog->objectName().isEmpty())
             Dialog->setObjectName(QStringLiteral("Dialog"));
-        Dialog->resize(400, 300);
+        Dialog->resize(398, 342);
         textBrowser = new QTextBrowser(Dialog);
         textBrowser->setObjectName(QStringLiteral("textBrowser"));
         textBrowser->setGeometry(QRect(20, 30, 331, 91));
@@ -47,10 +50,18 @@ public:
         chooseY->setGeometry(QRect(200, 140, 121, 91));
         lineEdit = new QLineEdit(Dialog);
         lineEdit->setObjectName(QStringLiteral("lineEdit"));
-        lineEdit->setGeometry(QRect(130, 250, 113, 27));
+        lineEdit->setGeometry(QRect(170, 300, 113, 27));
         label = new QLabel(Dialog);
         label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(60, 240, 67, 41));
+        label->setGeometry(QRect(100, 290, 67, 41));
+        checkBox = new QCheckBox(Dialog);
+        checkBox->setObjectName(QStringLiteral("checkBox"));
+        checkBox->setGeometry(QRect(70, 260, 97, 22));
+        checkBox->setAutoExclusive(true);
+        checkBox_2 = new QCheckBox(Dialog);
+        checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
+        checkBox_2->setGeometry(QRect(190, 260, 97, 22));
+        checkBox_2->setAutoExclusive(true);
 
         retranslateUi(Dialog);
 
@@ -72,6 +83,8 @@ public:
         chooseY->setText(QApplication::translate("Dialog", "O", 0));
         lineEdit->setText(QApplication::translate("Dialog", "2", 0));
         label->setText(QApplication::translate("Dialog", "Strength:", 0));
+        checkBox->setText(QApplication::translate("Dialog", "Win by 1", 0));
+        checkBox_2->setText(QApplication::translate("Dialog", "Win by 3", 0));
     } // retranslateUi
 
 };

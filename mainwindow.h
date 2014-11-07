@@ -58,11 +58,19 @@ public slots:
 
 private slots:
 
-    void begin(int strength);
+    void begin(int strength,bool mode);
+    void invalidMove();
+    void on_playAgain_clicked();
+
+    //For winbyone
+    void computerMove(int slot,int grid);
+
+
+    //For MonteBot
     void computerMove(int board_row, int board_col, int cell_row, int cell_col);
 
 
-    void on_playAgain_clicked();
+
 
 private:
     Ui::MainWindow *ui;
@@ -97,6 +105,7 @@ private:
     MonteBot montebot;
     Game newgame;
     Transmitter *transit = new Transmitter();
+    bool mode = false;
 
 };
 

@@ -21,7 +21,7 @@ void Dialog::on_chooseX_clicked()
 {
     choosenChar = 'X';
     strength = ui->lineEdit->text().toInt();
-    emit choosen(strength);
+    emit choosen(strength,ui->checkBox->isChecked());
     close();
 }
 
@@ -29,7 +29,7 @@ void Dialog::on_chooseY_clicked()
 {
     choosenChar = 'O';
     strength = ui->lineEdit->text().toInt();
-    emit choosen(strength);
+    emit choosen(strength,ui->checkBox->isChecked());
     close();
 }
 

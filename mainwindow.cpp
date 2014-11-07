@@ -21,9 +21,10 @@ MainWindow::MainWindow(QWidget *parent) :
     game->moveToThread(pthread);
 
 
-    connect(options,SIGNAL(choosen(int)),this,SLOT(begin(int)));
+    connect(options,SIGNAL(choosen(int,bool)),this,SLOT(begin(int,bool)));
     connect(game,SIGNAL(prediction(QString)),this,SLOT(prediction(QString)));
 
+    connect(game,SIGNAL(computerMove(int,int)),this,SLOT(computerMove(int,int)));
 
 
     connect(transit,SIGNAL(display(QString)),this,SLOT(prediction(QString)));
@@ -140,33 +141,62 @@ int MainWindow::itemClicked(){
 
     currentGrid = clickedItem->parent()->objectName().toInt();
 
-    // clickedItem->setText(QString(QChar('X')));
+    if(mode){
+        if(currentGrid != nextGrid && nextGrid != -1 && !wonGrids[nextGrid]){
+            qDebug() << "NOPE";
+            invalidMove();
+            return -1;
+        }
+        //Read user symbol, and set button to that symbol
+           if(humanTurn && game->isLegal(clickedItem->objectName().toInt(),currentGrid) && !wonGrids[currentGrid]){
+
+               clickedItem->setText(QString(QChar(game->gridChar(game->human))));        //Sets pushbutton text to player's char.
+
+               game->humanMove(clickedItem->objectName().toInt(),currentGrid);           //Sets subBoard with player's char
 
 
+               CheckWinner(currentGrid);
+               player = 1;
 
-    int board = clickedItem->parentWidget()->objectName().toInt();
-    int board_row =  board / 3;
-    int board_col = board % 3;
-    int cell_row = clickedItem->objectName().toInt() / 3;
-    int cell_col = clickedItem->objectName().toInt() % 3;
-
-    qDebug() << "board_row: " << board_row << " board_col: " << board_col << endl;
-    qDebug() << "cell_row: " << cell_row << " cell_col: " << cell_col << endl;
+               nextGrid = clickedItem->objectName().toInt();                             //next move for computer will need to be where player sent it to.
 
 
+              // emit computer_(nextGrid,1);
+               QFuture<void> future = QtConcurrent::run(this,&MainWindow::computer,nextGrid,1);
+               //game->CalculateGrid(nextGrid,1);
+               qDebug() << "RETURN: ";
 
-    if(!newgame.playCell(board_row,board_col,cell_row,cell_col))
-        qDebug() << "PLAYER, INVALID MOVE";
+           }
+
+
+    }
+
+
     else{
-        clickedItem->setText(QString(QChar('X')));
-        computerMoves();
+        int board = clickedItem->parentWidget()->objectName().toInt();
+        int board_row =  board / 3;
+        int board_col = board % 3;
+        int cell_row = clickedItem->objectName().toInt() / 3;
+        int cell_col = clickedItem->objectName().toInt() % 3;
+
+        qDebug() << "board_row: " << board_row << " board_col: " << board_col << endl;
+        qDebug() << "cell_row: " << cell_row << " cell_col: " << cell_col << endl;
+
+
+
+        if(!newgame.playCell(board_row,board_col,cell_row,cell_col))
+            qDebug() << "PLAYER, INVALID MOVE";
+        else{
+            clickedItem->setText(QString(QChar('X')));
+            computerMoves();
+        }
     }
 
 
 
 }
 
-void MainWindow::begin(int strength){
+void MainWindow::begin(int strength,bool mode){
     //Sets player character. Calls TicTacToe::Play()
     //The Game begins.
 
@@ -180,7 +210,12 @@ void MainWindow::begin(int strength){
     if(options->getChar() == 'O'){
         text.append(". Computer moves first.");
         player = 1;
-        //game->CalculateGrid(4,1); //Computer moves.
+
+        this->mode = mode;
+        if(mode){
+        game->CalculateGrid(4,1); //Computer moves
+        }
+        else
         computerMoves();
 
     }
@@ -188,6 +223,7 @@ void MainWindow::begin(int strength){
         text.append(". Select a square.");
         humanTurn = true;
         player = -1;
+
     }
 
     ui->announce->setText(text);
@@ -209,7 +245,6 @@ void MainWindow::computerMove(int board_row, int board_col, int cell_row, int ce
 
     itemButtons[grid][slot]->setText(QString(QChar('O')));
     itemButtons[grid][slot]->setStyleSheet("background-color: yellow");
-
 
     colorBoard(grid,slot);
 
@@ -265,6 +300,48 @@ void MainWindow::CheckWinner(int grid){
 
 }
 
+void MainWindow::invalidMove(){
+
+    ui->announce->setText("Invalid move! Try again.");
+    qDebug() << "currentGrid: " << currentGrid;
+    qDebug() << "nextGrid: " << nextGrid;
+
+}
+
+void MainWindow::computerMove(int move,int grid){
+
+
+    //When the computer goes first.
+    if(grid != -1)
+        nextGrid = grid;
+
+
+
+    qDebug() << "PLAYER: " << player;
+    humanTurn = false;
+    itemButtons[nextGrid][move]->setText(QString(QChar(game->gridChar(player))));
+
+    //Change player to opponent
+    if(player == 1)
+        player = -1;
+    else
+        player = 1;
+
+    colorBoard(nextGrid,move);
+
+    //Check if computer has won
+    CheckWinner(nextGrid);
+
+    //If not, then player's next move will be
+    nextGrid = move;
+
+    qDebug() << "Player must move here: " << nextGrid;
+
+    humanMoves();
+
+
+    //emit computer(nextGrid);
+}
 
 void MainWindow::on_playAgain_clicked()
 {
@@ -288,7 +365,7 @@ void MainWindow::on_playAgain_clicked()
     currentGrid = -1;
     nextGrid = -1;
     game->reset();
-    begin(strength);
+    begin(strength,mode);
 
     ui->playAgain->setVisible(false);
 

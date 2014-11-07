@@ -19,7 +19,7 @@ public:
     ~Dialog();
 
 signals:
-    void choosen(int strength);
+    void choosen(int strength,bool mode);
 
 
 private slots:

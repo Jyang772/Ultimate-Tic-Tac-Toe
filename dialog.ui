@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>398</width>
+    <height>342</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,8 +61,8 @@ p, li { white-space: pre-wrap; }
   <widget class="QLineEdit" name="lineEdit">
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>250</y>
+     <x>170</x>
+     <y>300</y>
      <width>113</width>
      <height>27</height>
     </rect>
@@ -74,14 +74,46 @@ p, li { white-space: pre-wrap; }
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>240</y>
+     <x>100</x>
+     <y>290</y>
      <width>67</width>
      <height>41</height>
     </rect>
    </property>
    <property name="text">
     <string>Strength:</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>260</y>
+     <width>97</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Win by 1</string>
+   </property>
+   <property name="autoExclusive">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_2">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>260</y>
+     <width>97</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Win by 3</string>
+   </property>
+   <property name="autoExclusive">
+    <bool>true</bool>
    </property>
   </widget>
  </widget>

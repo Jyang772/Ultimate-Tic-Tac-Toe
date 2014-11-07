@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[16];
-    char stringdata[164];
+    QByteArrayData data[20];
+    char stringdata[191];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -39,18 +39,23 @@ QT_MOC_LITERAL(6, 54, 10),
 QT_MOC_LITERAL(7, 65, 10),
 QT_MOC_LITERAL(8, 76, 5),
 QT_MOC_LITERAL(9, 82, 8),
-QT_MOC_LITERAL(10, 91, 12),
-QT_MOC_LITERAL(11, 104, 9),
-QT_MOC_LITERAL(12, 114, 9),
-QT_MOC_LITERAL(13, 124, 8),
-QT_MOC_LITERAL(14, 133, 8),
-QT_MOC_LITERAL(15, 142, 20)
+QT_MOC_LITERAL(10, 91, 4),
+QT_MOC_LITERAL(11, 96, 11),
+QT_MOC_LITERAL(12, 108, 20),
+QT_MOC_LITERAL(13, 129, 12),
+QT_MOC_LITERAL(14, 142, 4),
+QT_MOC_LITERAL(15, 147, 4),
+QT_MOC_LITERAL(16, 152, 9),
+QT_MOC_LITERAL(17, 162, 9),
+QT_MOC_LITERAL(18, 172, 8),
+QT_MOC_LITERAL(19, 181, 8)
     },
     "MainWindow\0turnComplete\0\0computer_\0"
     "player\0itemClicked\0humanMoves\0prediction\0"
-    "begin\0strength\0computerMove\0board_row\0"
-    "board_col\0cell_row\0cell_col\0"
-    "on_playAgain_clicked\0"
+    "begin\0strength\0mode\0invalidMove\0"
+    "on_playAgain_clicked\0computerMove\0"
+    "slot\0grid\0board_row\0board_col\0cell_row\0"
+    "cell_col\0"
 };
 #undef QT_MOC_LITERAL
 
@@ -60,7 +65,7 @@ static const uint qt_meta_data_MainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       8,   14, // methods
+      10,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -68,16 +73,18 @@ static const uint qt_meta_data_MainWindow[] = {
        2,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   54,    2, 0x06,
-       3,    2,   57,    2, 0x06,
+       1,    1,   64,    2, 0x06,
+       3,    2,   67,    2, 0x06,
 
  // slots: name, argc, parameters, tag, flags
-       5,    0,   62,    2, 0x0a,
-       6,    0,   63,    2, 0x0a,
-       7,    1,   64,    2, 0x0a,
-       8,    1,   67,    2, 0x08,
-      10,    4,   70,    2, 0x08,
-      15,    0,   79,    2, 0x08,
+       5,    0,   72,    2, 0x0a,
+       6,    0,   73,    2, 0x0a,
+       7,    1,   74,    2, 0x0a,
+       8,    2,   77,    2, 0x08,
+      11,    0,   82,    2, 0x08,
+      12,    0,   83,    2, 0x08,
+      13,    2,   84,    2, 0x08,
+      13,    4,   89,    2, 0x08,
 
  // signals: parameters
     QMetaType::Void, QMetaType::Int,    2,
@@ -87,9 +94,11 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Int,
     QMetaType::Void,
     QMetaType::Void, QMetaType::QString,    2,
-    QMetaType::Void, QMetaType::Int,    9,
-    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int,   11,   12,   13,   14,
+    QMetaType::Void, QMetaType::Int, QMetaType::Bool,    9,   10,
     QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int,   14,   15,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int,   16,   17,   18,   19,
 
        0        // eod
 };
@@ -105,9 +114,11 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
             if (_a[0]) *reinterpret_cast< int*>(_a[0]) = _r; }  break;
         case 3: _t->humanMoves(); break;
         case 4: _t->prediction((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 5: _t->begin((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 6: _t->computerMove((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4]))); break;
+        case 5: _t->begin((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2]))); break;
+        case 6: _t->invalidMove(); break;
         case 7: _t->on_playAgain_clicked(); break;
+        case 8: _t->computerMove((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 9: _t->computerMove((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -153,13 +164,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 8)
+        if (_id < 10)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 8;
+        _id -= 10;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 8)
+        if (_id < 10)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 8;
+        _id -= 10;
     }
     return _id;
 }
