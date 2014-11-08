@@ -522,7 +522,8 @@ void MainWindow::wonSlots(int board_row, int board_col, std::vector<Move>& slot)
 
     qDebug() << "WON SLOT FUNCTION";
 
-    int grid = newgame.currentBoard->row * 3 + newgame.currentBoard->col;
+    int grid = board_row * 3 + board_col;
+    qDebug() << "DEBUG: " << grid << endl;
 
     wonGrids[grid] = newgame.currentPlayer;
 
