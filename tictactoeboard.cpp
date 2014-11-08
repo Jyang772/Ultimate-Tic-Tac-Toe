@@ -1,4 +1,5 @@
 #include <iostream>
+#include <QDebug>
 
 #include "tictactoeboard.h"
 
@@ -90,7 +91,7 @@ bool TicTacToeBoard::playCellSilently(int row, int col, int player){
 
     cell.owner = player;
     if(!this->winner){
-        bool justWon = this->checkWon(row, col);
+        bool justWon = this->checkWon(row, col,true);
         if(justWon){
             //cout << "JustWon!!";
             this->winner = player;
@@ -114,7 +115,7 @@ bool TicTacToeBoard::playCell(int row, int col, int player){
 
         bool won = false;
         if(!this->winner){
-            won = this->checkWon(row, col);
+            won = this->checkWon(row, col,false);
             if(won){
                 this->winner = player;
                 for(int i=0; i<3; i++){
@@ -132,7 +133,7 @@ bool TicTacToeBoard::playCell(int row, int col, int player){
     return false;
 }
 
-bool TicTacToeBoard::checkWon(int row, int col){
+bool TicTacToeBoard::checkWon(int row, int col, bool silent){
     int player = this->cells[row][col].owner;
 
     int i=0;
@@ -142,6 +143,12 @@ bool TicTacToeBoard::checkWon(int row, int col){
         i += 1;
     }
     if(i == 3){
+        if(!silent){
+            wonSlots.push_back(Move(0,0,row,0));
+            wonSlots.push_back(Move(0,0,row,1));
+            wonSlots.push_back(Move(0,0,row,2));
+
+        }
         return true;
     }
 
@@ -153,6 +160,12 @@ bool TicTacToeBoard::checkWon(int row, int col){
         i += 1;
     }
     if(i == 3){
+        if(!silent){
+            wonSlots.push_back(Move(0,0,0,col));
+            wonSlots.push_back(Move(0,0,1,col));
+            wonSlots.push_back(Move(0,0,2,col));
+
+        }
         return true;
     }
 
@@ -164,6 +177,12 @@ bool TicTacToeBoard::checkWon(int row, int col){
         i += 1;
     }
     if(i == 3){
+        if(!silent){
+            wonSlots.push_back(Move(0,0,0,0));
+            wonSlots.push_back(Move(0,0,1,1));
+            wonSlots.push_back(Move(0,0,2,2));
+
+        }
         return true;
     }
 
@@ -175,6 +194,12 @@ bool TicTacToeBoard::checkWon(int row, int col){
         i += 1;
     }
     if(i == 3){
+        if(!silent){
+            wonSlots.push_back(Move(0,0,0,2));
+            wonSlots.push_back(Move(0,0,1,1));
+            wonSlots.push_back(Move(0,0,2,0));
+
+        }
         return true;
     }
     //None of the rows, cols, or diagnols were winning

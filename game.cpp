@@ -119,13 +119,16 @@ bool Game::playCell(int board_row, int board_col, int cell_row, int cell_col){
     }
 
     if(justWon){
-        qDebug() << "WON BOARD!!";
+        qDebug() << "WON BOARD! Player: " << this->currentPlayer;
+        transit->wonSlots(board_row, board_col,board->wonSlots);
 
         if(this->checkWonGame(board_row,board_col,true)){
             this->finished = true;
             this->winner = this->currentPlayer;
             //Show winning screen
             //return;
+
+            //If player == 1
             transit->computerMove(board_row,board_col,cell_row,cell_col);
             return true;
         }
@@ -169,8 +172,8 @@ bool Game::playCell(int board_row, int board_col, int cell_row, int cell_col){
         std::cout << "Cell Col: " << cell_col << std::endl;
         transit->computerMove(board_row,board_col,cell_row,cell_col);
 
-    }
 
+    }
 
     return true;
 }

@@ -4,6 +4,7 @@
 #include "dialog.h"
 #include "tictactoe.h"
 #include "montebot.h"
+#include "move.h";
 #include "game.h"
 #include "transmitter.h"
 
@@ -56,6 +57,9 @@ public slots:
     void prediction(QString);
 
 
+    //For MonteBot
+    void wonBoard(int,int,int);
+
 private slots:
 
     void begin(int strength,bool mode);
@@ -68,6 +72,7 @@ private slots:
 
     //For MonteBot
     void computerMove(int board_row, int board_col, int cell_row, int cell_col);
+    void wonSlots(int board_row, int board_col, std::vector<Move>&);
 
 
 

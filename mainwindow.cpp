@@ -27,7 +27,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(game,SIGNAL(computerMove(int,int)),this,SLOT(computerMove(int,int)));
 
 
+
     connect(transit,SIGNAL(display(QString)),this,SLOT(prediction(QString)));
+    connect(transit,SIGNAL(wonSlots(int, int, std::vector<Move>&)),this,SLOT(wonSlots(int, int, std::vector<Move>&)));
+    connect(transit,SIGNAL(wonBoard(int,int,int)),this,SLOT(wonBoard(int,int,int)));
     connect(transit,SIGNAL(computerMove(int,int,int,int)),this,SLOT(computerMove(int,int,int,int)));
     newgame.transit = transit; //Connect Game's transmitter to Mainwindow's transmitter
 
@@ -109,9 +112,6 @@ void MainWindow::setUpGrid(){
             if(i / (9*9) == 0)
                 layouts[8]->addWidget(itemButtons[8][i],row,column);
         }
-
-
-
 
 
 }
@@ -238,18 +238,6 @@ void MainWindow::humanMoves(){
 }
 
 
-void MainWindow::computerMove(int board_row, int board_col, int cell_row, int cell_col){
-
-    int grid = board_row * 3 + board_col;
-    int slot = cell_row * 3 + cell_col;
-
-    itemButtons[grid][slot]->setText(QString(QChar('O')));
-    itemButtons[grid][slot]->setStyleSheet("background-color: yellow");
-
-    colorBoard(grid,slot);
-
-}
-
 void MainWindow::CheckWinner(int grid){
 
     QString announce;
@@ -373,7 +361,6 @@ void MainWindow::on_playAgain_clicked()
 
 void MainWindow::colorBoard(int nextGrid, int move){
 
-    //itemButtons[nextGrid][move]->setStyleSheet("background-color: red");
 
     for(int i=0; i<9; i++){
         frames[i]->setStyleSheet("background-color: none");
@@ -390,13 +377,14 @@ void MainWindow::colorBoard(int nextGrid, int move){
 
 
     //Sets computer move's background color
-    QPushButton* button = itemButtons[nextGrid][move];
-    QPalette pal = button->palette();
-    pal.setColor(QPalette::Button, QColor(Qt::blue));
-    button->setAutoFillBackground(true);
-    button->setPalette(pal);
-    button->update();
+//    QPushButton* button = itemButtons[nextGrid][move];
+//    QPalette pal = button->palette();
+//    pal.setColor(QPalette::Button, QColor(Qt::blue));
+//    button->setAutoFillBackground(true);
+//    button->setPalette(pal);
+//    button->update();
 
+    if(wonGrids[nextGrid] == EMPTY)
     itemButtons[nextGrid][move]->setStyleSheet("background-color: yellow");
 
     if(wonGrids[move] == EMPTY){
@@ -416,6 +404,7 @@ void MainWindow::colorBoard(int nextGrid, int move){
 void MainWindow::colorBoardWin(int nextGrid,int player){
 
 
+    qDebug() << "ColorBoardWin";
 
     if(player == -1){
         itemButtons[nextGrid][game->winningRows[0]]->setStyleSheet("background-color: lightblue");
@@ -493,4 +482,64 @@ void MainWindow::computerMoves(){
     //Highlight
     humanMoves();
 
+}
+
+void MainWindow::computerMove(int board_row, int board_col, int cell_row, int cell_col){
+
+    int grid = board_row * 3 + board_col;
+    int slot = cell_row * 3 + cell_col;
+
+    itemButtons[grid][slot]->setText(QString(QChar('O')));
+    colorBoard(grid,slot);
+
+}
+
+void MainWindow::wonBoard(int board_row, int board_col, int player){
+
+
+    int grid = board_row * 3 + board_col;
+
+    int ultimateWin[3];
+
+
+    if(player == -1){
+        itemButtons[grid][ultimateWin[0]]->setStyleSheet("background-color: lightblue");
+        itemButtons[grid][ultimateWin[1]]->setStyleSheet("background-color: lightblue");
+        itemButtons[grid][ultimateWin[2]]->setStyleSheet("background-color: lightblue");
+    }
+    else{
+        itemButtons[grid][ultimateWin[0]]->setStyleSheet("background-color: pink");
+        itemButtons[grid][ultimateWin[1]]->setStyleSheet("background-color: pink");
+        itemButtons[grid][ultimateWin[2]]->setStyleSheet("background-color: pink");
+    }
+
+    //No one has won yet
+    return;
+}
+
+
+void MainWindow::wonSlots(int board_row, int board_col, std::vector<Move>& slot){
+
+    qDebug() << "WON SLOT FUNCTION";
+
+    int grid = newgame.currentBoard->row * 3 + newgame.currentBoard->col;
+
+    wonGrids[grid] = newgame.currentPlayer;
+
+    qDebug() << "grid: " << grid;
+    qDebug() << "slot: " << slot[0].cRow * 3 + slot[0].cCol;
+    qDebug() << "slot: " << slot[1].cRow * 3 + slot[1].cCol;
+    qDebug() << "slot: " << slot[2].cRow * 3 + slot[2].cCol;
+
+
+    if(newgame.currentPlayer == -1){
+        itemButtons[grid][slot[0].cRow * 3 + slot[0].cCol]->setStyleSheet("background-color: lightblue");
+        itemButtons[grid][slot[1].cRow * 3 + slot[1].cCol]->setStyleSheet("background-color: lightblue");
+        itemButtons[grid][slot[2].cRow * 3 + slot[2].cCol]->setStyleSheet("background-color: lightblue");
+    }
+    else{
+        itemButtons[grid][slot[0].cRow * 3 + slot[0].cCol]->setStyleSheet("background-color: pink");
+        itemButtons[grid][slot[1].cRow * 3 + slot[1].cCol]->setStyleSheet("background-color: pink");
+        itemButtons[grid][slot[2].cRow * 3 + slot[2].cCol]->setStyleSheet("background-color: pink");
+    }
 }
